@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:Weather"
+             x:Class="Weather.MainPage">
+
+    <ContentPage.BindingContext>
+        <local:MainViewModel/>
+    </ContentPage.BindingContext>
+
+    <StackLayout>
+        <Frame>
+            <StackLayout>
+                <Label Text="Current Conditions" />
+                <StackLayout Orientation="Horizontal">
+                    <StackLayout>
+                        <Label Text="Clearwater Air Park" />
+                        <Label Text="{Binding Updated}" />
+                        <Image Source="{local:ImageResource Weather.Images.ovc.png}" />
+                        <Label Text="Overcast" />
+                    </StackLayout>
+                    <StackLayout>
+                        <Label Text="66 F" />
+                        <Label Text="Wind NW 9 MPH" />
+                        <Label Text="Dew Point 61 F" />
+                        <Label Text="(83% RH)" />
+                    </StackLayout>
+                </StackLayout>
+                
+                <Button Text="Refresh"
+                        Command="{Binding Refresh}" />
+                
+            </StackLayout>
+        </Frame>
+    </StackLayout>
+
+</ContentPage>
