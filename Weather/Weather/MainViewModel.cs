@@ -29,7 +29,8 @@ namespace Weather
                     var deviceLocation = await Geolocation.GetLocationAsync();
 
                     // delay to simulate a network request
-                    await Task.Delay(1000);
+                    var nwsService = new NWSService();
+                    var gridPoint = await nwsService.GetGridPoints((float)deviceLocation.Latitude, (float)deviceLocation.Longitude);
 
                     // show updated fake data after fake network request
                     updated = DateTime.Now.ToString("dd MMM hh:mm tt");
