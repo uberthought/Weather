@@ -17,7 +17,7 @@
                 <Label Text="Current Conditions" />
                 <StackLayout Orientation="Horizontal">
                     <StackLayout>
-                        <Label Text="Clearwater Air Park" />
+                        <Label Text="{Binding Location}" />
                         <Label Text="{Binding Updated}" />
                         <Image Source="{local:ImageResource Weather.Images.ovc.png}" />
                         <Label Text="Overcast" />
