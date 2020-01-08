@@ -25,6 +25,9 @@ namespace Weather
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Updated)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Location)));
 
+                    // get the device's location
+                    var deviceLocation = await Geolocation.GetLocationAsync();
+
                     // delay to simulate a network request
                     await Task.Delay(1000);
 
