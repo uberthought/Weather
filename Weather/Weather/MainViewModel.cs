@@ -31,6 +31,7 @@ namespace Weather
                     // delay to simulate a network request
                     var nwsService = new NWSService();
                     var gridPoint = await nwsService.GetGridPoints((float)deviceLocation.Latitude, (float)deviceLocation.Longitude);
+                    var foo = await nwsService.GetCurrentConditions(gridPoint);
 
                     // show updated fake data after fake network request
                     updated = DateTime.Now.ToString("dd MMM hh:mm tt");
