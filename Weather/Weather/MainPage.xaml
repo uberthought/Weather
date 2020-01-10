@@ -19,14 +19,15 @@
                     <StackLayout>
                         <Label Text="{Binding Location}" />
                         <Label Text="{Binding Updated}" />
-                        <Image Source="{local:ImageResource Weather.Images.ovc.png}" />
-                        <Label Text="Overcast" />
+                        <!--<Image Source="{local:ImageResource Weather.Images.ovc.png}" />-->
+                        <Image Source="{Binding ConditionsIcon}" Scale="1.5" />
+                        <Label Text="{Binding TextDescription}" />
                     </StackLayout>
                     <StackLayout>
-                        <Label Text="66 F" />
-                        <Label Text="Wind NW 9 MPH" />
-                        <Label Text="Dew Point 61 F" />
-                        <Label Text="(83% RH)" />
+                        <Label Text="{Binding Temperature}" />
+                        <Label Text="{Binding Wind}" />
+                        <Label Text="{Binding DewPoint}" />
+                        <Label Text="{Binding RelativeHumidity}" />
                     </StackLayout>
                 </StackLayout>
                 
