@@ -14,20 +14,32 @@
     <StackLayout>
         <Frame>
             <StackLayout>
-                <Label Text="Current Conditions" />
+                <Label Text="Current Conditions" FontSize="Large" />
+                <BoxView Color="Black" HeightRequest="2" />
                 <StackLayout Orientation="Horizontal">
-                    <StackLayout>
-                        <Label Text="{Binding Location}" />
-                        <Label Text="{Binding Updated}" />
-                        <!--<Image Source="{local:ImageResource Weather.Images.ovc.png}" />-->
-                        <Image Source="{Binding ConditionsIcon}" Scale="1.5" />
-                        <Label Text="{Binding TextDescription}" />
+                    <StackLayout BackgroundColor="LightBlue" Padding="4" HorizontalOptions="FillAndExpand" >
+                        <Label Text="{Binding Location}"
+                               FontSize="Small"
+                               HorizontalTextAlignment="End" />
+                        <Label Text="{Binding Updated}"
+                               FontSize="Small"
+                               HorizontalTextAlignment="End" />
+                        <Image Source="{Binding ConditionsIcon}"
+                               HeightRequest="100" WidthRequest="100"
+                               HorizontalOptions="EndAndExpand" />
+                        <Label Text="{Binding TextDescription}"
+                               FontSize="Medium"
+                               HorizontalTextAlignment="End" />
                     </StackLayout>
-                    <StackLayout>
-                        <Label Text="{Binding Temperature}" />
-                        <Label Text="{Binding Wind}" />
-                        <Label Text="{Binding DewPoint}" />
-                        <Label Text="{Binding RelativeHumidity}" />
+                    <StackLayout BackgroundColor="LightBlue" Padding="4" HorizontalOptions="FillAndExpand" >
+                        <Label Text="{Binding Temperature}"
+                               FontSize="Large" />
+                        <Label Text="{Binding Wind}"
+                               FontSize="Medium" />
+                        <Label Text="{Binding DewPoint}"
+                               FontSize="Medium" />
+                        <Label Text="{Binding RelativeHumidity}"
+                               FontSize="Medium" />
                     </StackLayout>
                 </StackLayout>
                 
