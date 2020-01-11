@@ -45,28 +45,28 @@ namespace Weather
         {
             if (timestamp == null)
                 await Refresh();
-            return timestamp.Value;
+            return timestamp.GetValueOrDefault();
         }
 
         public async Task<double> GetTemperature()
         {
             if (temperature == null)
                 await Refresh();
-            return temperature.Value;
+            return temperature.GetValueOrDefault();
         }
 
         public async Task<double> GetDewPoint()
         {
             if (dewPoint == null)
                 await Refresh();
-            return dewPoint.Value;
+            return dewPoint.GetValueOrDefault();
         }
 
         public async Task<double> GetRelativeHumidity()
         {
             if (relativeHumidity == null)
                 await Refresh();
-            return relativeHumidity.Value;
+            return relativeHumidity.GetValueOrDefault();
         }
 
         public async Task<string> GetTextDescription()
@@ -80,14 +80,14 @@ namespace Weather
         {
             if (windSpeed == null)
                 await Refresh();
-            return windSpeed.Value;
+            return windSpeed.GetValueOrDefault();
         }
 
         public async Task<double> GetWindDirection()
         {
             if (windDirection == null)
                 await Refresh();
-            return windDirection.Value;
+            return windDirection.GetValueOrDefault();
         }
 
         public async Task<string> GetConditionsIconUrl()
@@ -99,86 +99,93 @@ namespace Weather
 
         async Task Refresh()
         {
-            // https://forecast.weather.gov/MapClick.php?lat=27.9789&lon=-82.7658&FcstType=dwml
-            var uri = new Uri($"{baseAddress}/?lat={queryLatitude}&lon={queryLongitude}&FcstType=dwml");
-            var response = await client.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                // extract the needed data from the json string
-                var content = await response.Content.ReadAsStringAsync();
-                var root = XElement.Parse(content);
-
-                var current = from el in root.Elements("data")
-                              where (string)el.Attribute("type") == "current observations"
-                              select el;
-                location = current.Elements("location")
-                    .SelectMany(el => el.Elements("area-description"))
-                    .FirstOrDefault().Value;
-
-                var timestampString = current.Elements("time-layout")
-                    .SelectMany(el => el.Elements("start-valid-time"))
-                    .FirstOrDefault().Value;
-
-                var temperatureString = current.Elements("parameters")
-                    .SelectMany(el => el.Elements("temperature"))
-                    .Where(el => (string)el.Attribute("type") == "apparent")
-                    .SelectMany(el => el.Elements("value"))
-                    .FirstOrDefault().Value;
-
-                var dewPointString = current.Elements("parameters")
-                    .SelectMany(el => el.Elements("temperature"))
-                    .Where(el => (string)el.Attribute("type") == "dew point")
-                    .SelectMany(el => el.Elements("value"))
-                    .FirstOrDefault().Value;
-
-                var relativeHumidityString = current.Elements("parameters")
-                    .SelectMany(el => el.Elements("humidity"))
-                    .SelectMany(el => el.Elements("value"))
-                    .FirstOrDefault().Value;
-
-                textDescription = current.Elements("parameters")
-                    .SelectMany(el => el.Elements("weather"))
-                    .SelectMany(el => el.Elements("weather-conditions"))
-                    .Select(el => el.Attribute("weather-summary"))
-                    .FirstOrDefault().Value;
-                if (textDescription == "NA")
-                    textDescription = "";
-
-                var windSpeedString = current.Elements("parameters")
-                    .SelectMany(el => el.Elements("wind-speed"))
-                    .Where(el => (string)el.Attribute("type") == "sustained")
-                    .SelectMany(el => el.Elements("value"))
-                    .FirstOrDefault().Value;
-
-                var windDirectionString = current.Elements("parameters")
-                    .SelectMany(el => el.Elements("direction"))
-                    .SelectMany(el => el.Elements("value"))
-                    .FirstOrDefault().Value;
-
-                conditionIconUrl = current.Elements("parameters")
-                    .SelectMany(el => el.Elements("conditions-icon"))
-                    .SelectMany(el => el.Elements("icon-link"))
-                    .FirstOrDefault().Value;
-                if (conditionIconUrl == "NULL")
-                    conditionIconUrl = "";
-                else
+                // https://forecast.weather.gov/MapClick.php?lat=27.9789&lon=-82.7658&FcstType=dwml
+                var uri = new Uri($"{baseAddress}/?lat={queryLatitude}&lon={queryLongitude}&FcstType=dwml");
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
                 {
-                    conditionIconUrl = conditionIconUrl.Replace("http://", "https://");
-                    //conditionIconUrl = conditionIconUrl.Replace("medium", "large");
-                }
+                    // extract the needed data from the json string
+                    var content = await response.Content.ReadAsStringAsync();
+                    var root = XElement.Parse(content);
 
-                timestamp = DateTime.Parse(timestampString);
-                temperature = double.Parse(temperatureString);
-                dewPoint = double.Parse(dewPointString);
-                relativeHumidity = double.Parse(relativeHumidityString);
-                if (windSpeedString == "NA")
-                    windSpeed = 0;
-                else
-                    windSpeed = double.Parse(windSpeedString) * 1.15077945;
-                if (windDirectionString == "NA")
-                    windDirection = 0;
-                else
-                    windDirection = double.Parse(windDirectionString);
+                    var current = from el in root.Elements("data")
+                                  where (string)el.Attribute("type") == "current observations"
+                                  select el;
+                    location = current.Elements("location")
+                        .SelectMany(el => el.Elements("area-description"))
+                        .FirstOrDefault().Value;
+
+                    var timestampString = current.Elements("time-layout")
+                        .SelectMany(el => el.Elements("start-valid-time"))
+                        .FirstOrDefault().Value;
+
+                    var temperatureString = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("temperature"))
+                        .Where(el => (string)el.Attribute("type") == "apparent")
+                        .SelectMany(el => el.Elements("value"))
+                        .FirstOrDefault().Value;
+
+                    var dewPointString = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("temperature"))
+                        .Where(el => (string)el.Attribute("type") == "dew point")
+                        .SelectMany(el => el.Elements("value"))
+                        .FirstOrDefault().Value;
+
+                    var relativeHumidityString = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("humidity"))
+                        .SelectMany(el => el.Elements("value"))
+                        .FirstOrDefault().Value;
+
+                    textDescription = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("weather"))
+                        .SelectMany(el => el.Elements("weather-conditions"))
+                        .Select(el => el.Attribute("weather-summary"))
+                        .FirstOrDefault().Value;
+                    if (textDescription == "NA")
+                        textDescription = "";
+
+                    var windSpeedString = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("wind-speed"))
+                        .Where(el => (string)el.Attribute("type") == "sustained")
+                        .SelectMany(el => el.Elements("value"))
+                        .FirstOrDefault().Value;
+
+                    var windDirectionString = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("direction"))
+                        .SelectMany(el => el.Elements("value"))
+                        .FirstOrDefault().Value;
+
+                    conditionIconUrl = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("conditions-icon"))
+                        .SelectMany(el => el.Elements("icon-link"))
+                        .FirstOrDefault().Value;
+                    if (conditionIconUrl == "NULL")
+                        conditionIconUrl = "";
+                    else
+                    {
+                        conditionIconUrl = conditionIconUrl.Replace("http://", "https://");
+                        //conditionIconUrl = conditionIconUrl.Replace("medium", "large");
+                    }
+
+                    timestamp = DateTime.Parse(timestampString);
+                    temperature = double.Parse(temperatureString);
+                    dewPoint = double.Parse(dewPointString);
+                    relativeHumidity = double.Parse(relativeHumidityString);
+                    if (windSpeedString == "NA")
+                        windSpeed = 0;
+                    else
+                        windSpeed = double.Parse(windSpeedString) * 1.15077945;
+                    if (windDirectionString == "NA")
+                        windDirection = 0;
+                    else
+                        windDirection = double.Parse(windDirectionString);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
             }
         }
     }

@@ -44,7 +44,8 @@
                 </StackLayout>
                 
                 <Button Text="Refresh"
-                        Command="{Binding Refresh}" />
+                        Command="{Binding Refresh}"
+                        IsEnabled="{Binding RefreshIsEnabled}"/>
                 
             </StackLayout>
         </Frame>
