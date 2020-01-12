@@ -13,36 +13,104 @@
 
     <RefreshView IsRefreshing="{Binding IsRefreshing}" 
                  Command="{Binding RefreshCommand}">
-        <ScrollView>
+        <ScrollView Padding="4">
             <StackLayout>
-                <Label Text="Current Conditions" FontSize="Large" />
                 <BoxView Color="Black" HeightRequest="2" />
-                <StackLayout Orientation="Horizontal">
-                    <StackLayout BackgroundColor="LightBlue" Padding="4" HorizontalOptions="FillAndExpand" >
-                        <Label Text="{Binding Location}"
-                               FontSize="Small"
-                               HorizontalTextAlignment="End" />
-                        <Label Text="{Binding Updated}"
-                               FontSize="Small"
-                               HorizontalTextAlignment="End" />
+                <Label Text="Current Conditions"
+                       FontSize="Medium" FontAttributes="Bold"/>
+                <BoxView Color="Black" HeightRequest="2" />
+                <Label Text="{Binding Location}"
+                       FontSize="Medium"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackLayout Padding="4" Grid.Column="0" >
                         <Image Source="{Binding ConditionsIcon}"
                                HeightRequest="100" WidthRequest="100"
-                               HorizontalOptions="EndAndExpand" />
+                               HorizontalOptions="CenterAndExpand" />
                         <Label Text="{Binding TextDescription}"
                                FontSize="Medium"
-                               HorizontalTextAlignment="End" />
+                               HorizontalTextAlignment="Center" />
                     </StackLayout>
-                    <StackLayout BackgroundColor="LightBlue" Padding="4" HorizontalOptions="FillAndExpand" >
+                    <StackLayout Padding="4" Grid.Column="1" >
                         <Label Text="{Binding Temperature}"
-                               FontSize="Large" />
+                               FontSize="Medium"
+                               FontAttributes="Bold" />
                         <Label Text="{Binding Wind}"
-                               FontSize="Medium" />
+                               FontSize="Small" />
                         <Label Text="{Binding DewPoint}"
-                               FontSize="Medium" />
+                               FontSize="Small" />
                         <Label Text="{Binding RelativeHumidity}"
-                               FontSize="Medium" />
+                               FontSize="Small" />
                     </StackLayout>
-                </StackLayout>
+                </Grid>
+                <BoxView Color="Black" HeightRequest="2" />
+                <Label Text="Forecast"
+                       FontSize="Medium" FontAttributes="Bold"/>
+                <BoxView Color="Black" HeightRequest="2" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackLayout BackgroundColor="{Binding ForecastBackgrounds[0]}" Padding="4" Grid.Column="0" >
+                        <Label Text="{Binding ForecastLabels[0]}"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"/>
+                        <Image Source="{Binding ForecastIcons[0]}"
+                               HeightRequest="100" WidthRequest="100"
+                               HorizontalOptions="CenterAndExpand" />
+                        <Label Text="{Binding ForecastDescriptions[0]}"
+                               HorizontalTextAlignment="Center" />
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                            <Label Text="{Binding ForecastTemperatureLabels[0]}"
+                               HorizontalTextAlignment="End" />
+                            <Label Text="{Binding ForecastTemperatures[0]}"
+                               TextColor="{Binding ForecastColors[0]}"
+                               HorizontalTextAlignment="Start" />
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout BackgroundColor="{Binding ForecastBackgrounds[1]}" Padding="4" Grid.Column="1" >
+                        <Label Text="{Binding ForecastLabels[1]}"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"/>
+                        <Image Source="{Binding ForecastIcons[1]}"
+                               HeightRequest="100" WidthRequest="100"
+                               HorizontalOptions="CenterAndExpand" />
+                        <Label Text="{Binding ForecastDescriptions[1]}"
+                               HorizontalTextAlignment="Center" />
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                            <Label Text="{Binding ForecastTemperatureLabels[1]}"
+                               HorizontalTextAlignment="End" />
+                            <Label Text="{Binding ForecastTemperatures[1]}"
+                               TextColor="{Binding ForecastColors[1]}"
+                               HorizontalTextAlignment="Start" />
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout BackgroundColor="{Binding ForecastBackgrounds[2]}" Padding="4" Grid.Column="2" >
+                        <Label Text="{Binding ForecastLabels[2]}"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"/>
+                        <Image Source="{Binding ForecastIcons[2]}"
+                               HeightRequest="100" WidthRequest="100"
+                               HorizontalOptions="CenterAndExpand" />
+                        <Label Text="{Binding ForecastDescriptions[2]}"
+                               HorizontalTextAlignment="Center" />
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                            <Label Text="{Binding ForecastTemperatureLabels[2]}"
+                               HorizontalTextAlignment="End" />
+                            <Label Text="{Binding ForecastTemperatures[2]}"
+                               TextColor="{Binding ForecastColors[2]}"
+                               HorizontalTextAlignment="Start" />
+                        </StackLayout>
+                    </StackLayout>
+                </Grid>
+                <BoxView Color="Black" HeightRequest="2" />
+                <Label Text="{Binding Updated}"/>
+                <Label Text="{Binding Requested}"/>
             </StackLayout>
         </ScrollView>
     </RefreshView>

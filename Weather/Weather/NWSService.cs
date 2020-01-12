@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -24,6 +25,14 @@ namespace Weather
         double? dewPoint;
         double? relativeHumidity;
         string conditionIconUrl;
+
+        // forecast
+        List<string> forecastLabels;
+        List<string> forecastIcons;
+        List<string> forecastDescriptions;
+        bool? isForecastDay;
+        List<double> forecastLows;
+        List<double> forecastHighs;
 
         public NWSService(double latitude, double longitude)
         {
@@ -97,6 +106,48 @@ namespace Weather
             return conditionIconUrl;
         }
 
+        public async Task<List<string>> GetForecastLabels()
+        {
+            if (forecastLabels == null)
+                await Refresh();
+            return forecastLabels;
+        }
+
+        public async Task<List<string>> GetForecastIcons()
+        {
+            if (forecastIcons == null)
+                await Refresh();
+            return forecastIcons;
+        }
+
+        public async Task<List<string>> GetForecastDescriptions()
+        {
+            if (forecastDescriptions == null)
+                await Refresh();
+            return forecastDescriptions;
+        }
+
+        public async Task<bool> GetIsForecastDay()
+        {
+            if (isForecastDay == null)
+                await Refresh();
+            return isForecastDay.GetValueOrDefault();
+        }
+
+        public async Task<List<double>> GetForecastLows()
+        {
+            if (forecastLows == null)
+                await Refresh();
+            return forecastLows;
+        }
+
+        public async Task<List<double>> GetForecastHighs()
+        {
+            if (forecastHighs == null)
+                await Refresh();
+            return forecastHighs;
+        }
+
         async Task Refresh()
         {
             try
@@ -109,6 +160,8 @@ namespace Weather
                     // extract the needed data from the json string
                     var content = await response.Content.ReadAsStringAsync();
                     var root = XElement.Parse(content);
+
+                    // current conditions
 
                     var current = from el in root.Elements("data")
                                   where (string)el.Attribute("type") == "current observations"
@@ -181,6 +234,55 @@ namespace Weather
                         windDirection = 0;
                     else
                         windDirection = double.Parse(windDirectionString);
+
+                    // forecast
+
+                    var forecast = from el in root.Elements("data")
+                                   where (string)el.Attribute("type") == "forecast"
+                                   select el;
+
+                    forecastLabels = forecast.Elements("time-layout")
+                        .SelectMany(el => el.Elements("start-valid-time"))
+                        .Select(el => el.Attribute("period-name"))
+                        .Select(el => el.Value)
+                        .Take(3)
+                        .ToList();
+
+                    forecastIcons = forecast.Elements("parameters")
+                        .SelectMany(el => el.Elements("conditions-icon"))
+                        .SelectMany(el => el.Elements("icon-link"))
+                        .Select(el => el.Value)
+                        .Select(s => s.Replace("http://", "https://"))
+                        .Take(3)
+                        .ToList();
+
+                    forecastDescriptions = forecast.Elements("parameters")
+                        .SelectMany(el => el.Elements("weather"))
+                        .SelectMany(el => el.Elements("weather-conditions"))
+                        .Select(el => el.Attribute("weather-summary"))
+                        .Select(el => el.Value)
+                        .Take(3)
+                        .ToList();
+
+                    isForecastDay = (forecastLabels[1] == "Tonight");
+
+                    forecastLows = forecast.Elements("parameters")
+                        .SelectMany(el => el.Elements("temperature"))
+                        .Where(el => (string)el.Attribute("type") == "minimum")
+                        .SelectMany(el => el.Elements("value"))
+                        .Select(el => el.Value)
+                        .Select(s => double.Parse(s))
+                        .Take(3)
+                        .ToList();
+
+                    forecastHighs = forecast.Elements("parameters")
+                        .SelectMany(el => el.Elements("temperature"))
+                        .Where(el => (string)el.Attribute("type") == "maximum")
+                        .SelectMany(el => el.Elements("value"))
+                        .Select(el => el.Value)
+                        .Select(s => double.Parse(s))
+                        .Take(3)
+                        .ToList();
                 }
             }
             catch (Exception ex)
