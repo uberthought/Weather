@@ -155,7 +155,10 @@ namespace Weather
                 });
 
             // execute a refresh command now and every hour
-            timer = new Timer((o) => { RefreshCommand.Execute(null); }, null, TimeSpan.Zero, TimeSpan.FromHours(1));
+            timer = new Timer((o) =>
+            {
+            MainThread.BeginInvokeOnMainThread(() => { RefreshCommand.Execute(null); } );
+            }, null, TimeSpan.Zero, TimeSpan.FromHours(1));
         }
 
         string updated = "";
