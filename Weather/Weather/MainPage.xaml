@@ -11,8 +11,9 @@
         <local:MainViewModel/>
     </ContentPage.BindingContext>
 
-    <StackLayout>
-        <Frame>
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+                 Command="{Binding RefreshCommand}">
+        <ScrollView>
             <StackLayout>
                 <Label Text="Current Conditions" FontSize="Large" />
                 <BoxView Color="Black" HeightRequest="2" />
@@ -42,13 +43,8 @@
                                FontSize="Medium" />
                     </StackLayout>
                 </StackLayout>
-                
-                <Button Text="Refresh"
-                        Command="{Binding Refresh}"
-                        IsEnabled="{Binding RefreshIsEnabled}"/>
-                
             </StackLayout>
-        </Frame>
-    </StackLayout>
+        </ScrollView>
+    </RefreshView>
 
 </ContentPage>

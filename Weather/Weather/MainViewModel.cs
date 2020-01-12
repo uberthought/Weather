@@ -16,10 +16,11 @@ namespace Weather
         public MainViewModel()
         {
             // setup Refresh button binding
-            Refresh = new Command(
+            RefreshCommand = new Command(
                 execute: async () =>
                 {
-                    DisableRefresh();
+                    isRefreshing = true;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRefreshing)));
 
                     // get the device's location
                     var deviceLocation = await Geolocation.GetLocationAsync();
@@ -85,10 +86,11 @@ namespace Weather
                         System.Diagnostics.Debug.WriteLine(ex);
                     }
 
-                    EnableRefresh();
+                    isRefreshing = false;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRefreshing)));
                 });
 
-            Refresh.Execute(null);
+            RefreshCommand.Execute(null);
         }
 
         string updated = "";
@@ -141,7 +143,7 @@ namespace Weather
         }
 
         // Refresh button
-        public ICommand Refresh { private set; get; }
+        public ICommand RefreshCommand { private set; get; }
 
         bool refreshIsEnabled = true;
         public bool RefreshIsEnabled
@@ -149,16 +151,7 @@ namespace Weather
             get { return refreshIsEnabled; }
         }
 
-        void EnableRefresh()
-        {
-            refreshIsEnabled = true;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RefreshIsEnabled)));
-        }
-
-        void DisableRefresh()
-        {
-            refreshIsEnabled = false;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RefreshIsEnabled)));
-        }
+        bool isRefreshing;
+        public bool IsRefreshing { get { return isRefreshing; } }
     }
 }
