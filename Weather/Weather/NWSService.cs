@@ -245,7 +245,7 @@ namespace Weather
                         .SelectMany(el => el.Elements("start-valid-time"))
                         .Select(el => el.Attribute("period-name"))
                         .Select(el => el.Value)
-                        .Take(3)
+                        .Take(14)
                         .ToList();
 
                     forecastIcons = forecast.Elements("parameters")
@@ -253,7 +253,6 @@ namespace Weather
                         .SelectMany(el => el.Elements("icon-link"))
                         .Select(el => el.Value)
                         .Select(s => s.Replace("http://", "https://"))
-                        .Take(3)
                         .ToList();
 
                     forecastDescriptions = forecast.Elements("parameters")
@@ -261,7 +260,6 @@ namespace Weather
                         .SelectMany(el => el.Elements("weather-conditions"))
                         .Select(el => el.Attribute("weather-summary"))
                         .Select(el => el.Value)
-                        .Take(3)
                         .ToList();
 
                     isForecastDay = (forecastLabels[1] == "Tonight");
@@ -272,7 +270,6 @@ namespace Weather
                         .SelectMany(el => el.Elements("value"))
                         .Select(el => el.Value)
                         .Select(s => double.Parse(s))
-                        .Take(3)
                         .ToList();
 
                     forecastHighs = forecast.Elements("parameters")
@@ -281,7 +278,6 @@ namespace Weather
                         .SelectMany(el => el.Elements("value"))
                         .Select(el => el.Value)
                         .Select(s => double.Parse(s))
-                        .Take(3)
                         .ToList();
                 }
             }

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using System.Threading;
+using System.Linq;
 
 namespace Weather
 {
@@ -76,55 +77,28 @@ namespace Weather
                             conditionsIcon = ImageSource.FromUri(new Uri(imageSourceUrl));
 
                         // update forecast
-                        forecastLabels = await nwsService.GetForecastLabels();
-                        forecastIcons = await nwsService.GetForecastIcons();
-                        forecastDescriptions = await nwsService.GetForecastDescriptions();
+                        var forecastLabels = await nwsService.GetForecastLabels();
+                        var forecastIcons = await nwsService.GetForecastIcons();
+                        var forecastDescriptions = await nwsService.GetForecastDescriptions();
                         var forecastLows = await nwsService.GetForecastLows();
                         var forecastHighs = await nwsService.GetForecastHighs();
 
-                        if (await nwsService.GetIsForecastDay())
+                        forecastCells = new List<ForecastCell>();
+                        for (var i = 0; i < forecastLabels.Count(); i++)
                         {
-                            forecastTemperatureLabels = new List<string> { "Hi:", "Low:", "Hi:" };
-                            forecastTemperatures = new List<string>
+                            var isLow = (forecastLabels[0] == "Tonight" && i % 2 == 0);
+                            var temperature = isLow ? forecastLows[(int)(i / 2)] : forecastHighs[(int)(i / 2)];
+
+                            forecastCells.Add(new ForecastCell
                             {
-                                $"{forecastHighs[0]:0}℉",
-                                $"{forecastLows[0]:0}℉",
-                                $"{forecastHighs[1]:0}℉"
-                            };
-                            forecastColors = new List<Color>
-                            {
-                                Color.Red,
-                                Color.Blue,
-                                Color.Red,
-                            };
-                            forecastBackgrounds = new List<Color>
-                            {
-                                Color.LightBlue,
-                                Color.DarkGray,
-                                Color.LightBlue,
-                            };
-                        }
-                        else
-                        {
-                            forecastTemperatureLabels = new List<string> { "Low:", "Hi:", "Low:" };
-                            forecastTemperatures = new List<string>
-                            {
-                                $"{forecastLows[0]:0}℉",
-                                $"{forecastHighs[0]:0}℉",
-                                $"{forecastLows[1]:0}℉"
-                            };
-                            forecastColors = new List<Color>
-                            {
-                                Color.Blue,
-                                Color.Red,
-                                Color.Blue,
-                            };
-                            forecastBackgrounds = new List<Color>
-                            {
-                                Color.DarkGray,
-                                Color.LightBlue,
-                                Color.DarkGray,
-                            };
+                                Label = forecastLabels[i],
+                                Icon = forecastIcons[i],
+                                Description = forecastDescriptions[i],
+                                TemperatureLabel = isLow ? "Low:" : "Hi:",
+                                Temperature = $"{temperature:0}℉",
+                                TemperatureColor = isLow ? Color.Blue : Color.Red,
+                                BackgroundColor = isLow ? Color.DarkGray : Color.LightBlue
+                            });
                         }
 
                         // tell UI to update
@@ -137,13 +111,7 @@ namespace Weather
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Wind)));
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConditionsIcon)));
 
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastLabels)));
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastIcons)));
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastDescriptions)));
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastTemperatureLabels)));
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastTemperatures)));
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastColors)));
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastBackgrounds)));
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastCells)));
                     }
                     catch (Exception ex)
                     {
@@ -196,83 +164,8 @@ namespace Weather
 
         // forecast
 
-        List<string> forecastLabels;
-        public List<string> ForecastLabels
-        {
-            get
-            {
-                if (forecastLabels == null)
-                    return new List<string> { "", "", "" };
-                return forecastLabels;
-            }
-        }
-
-
-        List<string> forecastIcons;
-        public List<string> ForecastIcons
-        {
-            get
-            {
-                if (forecastIcons == null)
-                    return new List<string> { "", "", "" };
-                return forecastIcons;
-            }
-        }
-
-        List<string> forecastDescriptions;
-        public List<string> ForecastDescriptions
-        {
-            get
-            {
-                if (forecastDescriptions == null)
-                    return new List<string> { "", "", "" };
-                return forecastDescriptions;
-            }
-        }
-
-        List<string> forecastTemperatureLabels;
-        public List<string> ForecastTemperatureLabels
-        {
-            get
-            {
-                if (forecastTemperatureLabels == null)
-                    return new List<string> { "", "", "" };
-                return forecastTemperatureLabels;
-            }
-        }
-
-        List<string> forecastTemperatures;
-        public List<string> ForecastTemperatures
-        {
-            get
-            {
-                if (forecastTemperatures == null)
-                    return new List<string> { "", "", "" };
-                return forecastTemperatures;
-            }
-        }
-
-        List<Color> forecastColors;
-        public List<Color> ForecastColors
-        {
-            get
-            {
-                if (forecastColors == null)
-                    return new List<Color> { Color.Black, Color.Black, Color.Black };
-                return forecastColors;
-            }
-        }
-
-        List<Color> forecastBackgrounds;
-        public List<Color> ForecastBackgrounds
-        {
-            get
-            {
-                if (forecastBackgrounds == null)
-                    return new List<Color> { Color.LightBlue, Color.LightBlue, Color.LightBlue };
-                return forecastBackgrounds;
-            }
-        }
+        List<ForecastCell> forecastCells;
+        public List<ForecastCell> ForecastCells { get { return forecastCells; } }
 
         // Refresh
 
