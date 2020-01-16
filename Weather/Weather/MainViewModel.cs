@@ -83,8 +83,17 @@ namespace Weather
                         var forecastLows = await nwsService.GetForecastLows();
                         var forecastHighs = await nwsService.GetForecastHighs();
 
+                        var forecastCount = new List<int>
+                        {
+                            forecastLabels.Count(),
+                            forecastIcons.Count(),
+                            forecastDescriptions.Count(),
+                            forecastLows.Count(),
+                            forecastHighs.Count()
+                        }.Min();
+
                         forecastCells = new List<ForecastCell>();
-                        for (var i = 0; i < forecastLabels.Count(); i++)
+                        for (var i = 0; i < forecastCount; i++)
                         {
                             var isLow = (forecastLabels[0] == "Tonight" && i % 2 == 0);
                             var temperature = isLow ? forecastLows[(int)(i / 2)] : forecastHighs[(int)(i / 2)];
