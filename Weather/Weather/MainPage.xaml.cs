@@ -17,5 +17,20 @@ namespace Weather
         {
             InitializeComponent();
         }
+
+        async void Button_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MapPage());
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            var mainViewModel = BindingContext as MainViewModel;
+
+            if (mainViewModel != null && !mainViewModel.IsRefreshing)
+                mainViewModel.Refresh();
+        }
     }
 }
