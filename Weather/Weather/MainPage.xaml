@@ -50,7 +50,7 @@
                 <Label Text="Forecast"
                        FontSize="Medium" FontAttributes="Bold"/>
                 <BoxView Color="Black" HeightRequest="2" />
-                <CollectionView ItemsLayout="HorizontalList" ItemsSource="{Binding ForecastCells}" HeightRequest="200">
+                <CollectionView ItemsLayout="HorizontalList" ItemsSource="{Binding ForecastCells}" HeightRequest="235">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout BackgroundColor="{Binding BackgroundColor}" Padding="4" Grid.Column="0" >
@@ -61,7 +61,8 @@
                                    HeightRequest="100" WidthRequest="100"
                                    HorizontalOptions="CenterAndExpand" />
                                 <Label Text="{Binding Description}"
-                                   HorizontalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center"
+                                       WidthRequest="100"/>
                                 <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                     <Label Text="{Binding TemperatureLabel}"
                                            HorizontalTextAlignment="End" />

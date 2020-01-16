@@ -88,8 +88,8 @@ namespace Weather
                             forecastLabels.Count(),
                             forecastIcons.Count(),
                             forecastDescriptions.Count(),
-                            forecastLows.Count(),
-                            forecastHighs.Count()
+                            forecastLows.Count() * 2,
+                            forecastHighs.Count() * 2
                         }.Min();
 
                         forecastCells = new List<ForecastCell>();
@@ -101,7 +101,7 @@ namespace Weather
                             forecastCells.Add(new ForecastCell
                             {
                                 Label = forecastLabels[i],
-                                Icon = forecastIcons[i],
+                                Icon = ImageSource.FromUri(new Uri(forecastIcons[i])),
                                 Description = forecastDescriptions[i],
                                 TemperatureLabel = isLow ? "Low:" : "Hi:",
                                 Temperature = $"{temperature:0}℉",
