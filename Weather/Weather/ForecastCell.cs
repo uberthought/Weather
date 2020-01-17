@@ -7,6 +7,7 @@ namespace Weather
 {
     public class ForecastCell
     {
+        public int Index { get; set; }
         public string Label { get; set; }
         public ImageSource Icon { get; set; }
         public string Description { get; set; }

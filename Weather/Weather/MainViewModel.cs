@@ -41,7 +41,8 @@ namespace Weather
                 var location = await App.GetLocation();
 
                 // create NWS request object and get forecast
-                var nwsService = await NWSService.GetForecast(location.Latitude, location.Longitude);
+                var nwsService = NWSService.GetService();
+                await nwsService.SetLocation(location.Latitude, location.Longitude);
 
                 requested = "Last Requested: " + DateTime.Now.ToString("dd MMM hh:mm tt");
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Requested)));
@@ -117,11 +118,14 @@ namespace Weather
                 forecastCells = new List<ForecastCell>();
                 for (var i = 0; i < forecastCount; i++)
                 {
-                    var isLow = (nwsService.ForecastLabels[0] == "Tonight" && i % 2 == 0);
+                    var isLow = i % 2 != 0;
+                    if (nwsService.ForecastLabels[0] == "Tonight")
+                        isLow = !isLow;
                     var temperature = isLow ? nwsService.ForecastLows[(int)(i / 2)] : nwsService.ForecastHighs[(int)(i / 2)];
 
                     forecastCells.Add(new ForecastCell
                     {
+                        Index = i,
                         Label = nwsService.ForecastLabels[i],
                         Icon = ImageSource.FromUri(new Uri(nwsService.ForecastIcons[i])),
                         Description = nwsService.ForecastDescriptions[i],

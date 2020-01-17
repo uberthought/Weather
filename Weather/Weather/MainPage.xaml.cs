@@ -32,5 +32,15 @@ namespace Weather
             if (mainViewModel != null && !mainViewModel.IsRefreshing)
                 mainViewModel.Refresh();
         }
+
+        async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedCell = e.CurrentSelection.FirstOrDefault() as ForecastCell;
+
+            if (selectedCell == null)
+                return;
+
+            await Navigation.PushAsync(new DetailPage(selectedCell.Index));
+        }
     }
 }

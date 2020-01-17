@@ -11,6 +11,8 @@ namespace Weather
     {
         static string baseAddress = "https://forecast.weather.gov/MapClick.php";
         HttpClient client;
+        DateTime lastRefresh = DateTime.MinValue;
+
         public double QueryLatitude { private set; get; }
         public double QueryLongitude { private set; get; }
 
@@ -33,24 +35,38 @@ namespace Weather
         public List<double> ForecastLows { private set; get; }
         public List<double> ForecastHighs { private set; get; }
 
-        public static async Task<NWSService> GetForecast(double latitude, double longitude)
+        public List<string> WordedForecast { private set; get; }
+
+        static NWSService service;
+        public static NWSService GetService()
         {
-            var nwsService = new NWSService(latitude, longitude);
-            await nwsService.Refresh();
-            return nwsService;
+            if (service == null)
+                service = new NWSService();
+            return service;
         }
 
-        NWSService(double latitude, double longitude)
+        public async Task SetLocation(double latitude, double longitude)
         {
-            this.QueryLatitude = latitude;
-            this.QueryLongitude = longitude;
+            if (service.QueryLatitude != latitude || service.QueryLongitude != longitude)
+            {
+                service.QueryLatitude = latitude;
+                service.QueryLongitude = longitude;
+                lastRefresh = DateTime.MinValue;
+            }
+            await service.Refresh();
+        }
 
+        NWSService()
+        {
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "Weather app");
         }
 
         async Task Refresh()
         {
+            if (TextDescription != null && DateTime.UtcNow - lastRefresh < TimeSpan.FromMinutes(15))
+                return;
+            await Task.Delay(100);
             try
             {
                 // https://forecast.weather.gov/MapClick.php?lat=27.9789&lon=-82.7658&FcstType=dwml
@@ -181,6 +197,14 @@ namespace Weather
                         .Select(el => el.Value)
                         .Select(s => double.Parse(s))
                         .ToList();
+
+                    WordedForecast = forecast.Elements("parameters")
+                        .SelectMany(el => el.Elements("wordedForecast"))
+                        .SelectMany(el => el.Elements("text"))
+                        .Select(el => el.Value)
+                        .ToList();
+
+                    lastRefresh = DateTime.UtcNow;
                 }
             }
             catch (Exception ex)
