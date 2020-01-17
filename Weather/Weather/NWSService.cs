@@ -27,6 +27,9 @@ namespace Weather
         public double? DewPoint { private set; get; }
         public double? RelativeHumidity { private set; get; }
         public string ConditionIconUrl { private set; get; }
+        public double? Visibility { private set; get; }
+        public double? Gust { private set; get; }
+        public double? Pressure { private set; get; }
 
         // forecast
         public List<string> ForecastLabels { private set; get; }
@@ -47,13 +50,30 @@ namespace Weather
 
         public async Task SetLocation(double latitude, double longitude)
         {
-            if (service.QueryLatitude != latitude || service.QueryLongitude != longitude)
+            if (QueryLatitude != latitude || QueryLongitude != longitude)
             {
-                service.QueryLatitude = latitude;
-                service.QueryLongitude = longitude;
+                QueryLatitude = latitude;
+                QueryLongitude = longitude;
+
+                Location = null;
+                Temperature = null;
+                Timestamp = null;
+                TextDescription = null;
+                WindDirection = null;
+                WindSpeed = null;
+                DewPoint = null;
+                RelativeHumidity = null;
+                ConditionIconUrl = null;
+                ForecastLabels = null;
+                ForecastIcons = null;
+                ForecastDescriptions = null;
+                ForecastLows = null;
+                ForecastHighs = null;
+                WordedForecast = null;
+
                 lastRefresh = DateTime.MinValue;
             }
-            await service.Refresh();
+            await Refresh();
         }
 
         NWSService()
@@ -62,9 +82,11 @@ namespace Weather
             client.DefaultRequestHeaders.Add("User-Agent", "Weather app");
         }
 
+        public bool IsValid => Location != null;
+
         async Task Refresh()
         {
-            if (TextDescription != null && DateTime.UtcNow - lastRefresh < TimeSpan.FromMinutes(15))
+            if (IsValid && DateTime.UtcNow - lastRefresh < TimeSpan.FromMinutes(15))
                 return;
             await Task.Delay(100);
             try
@@ -136,10 +158,7 @@ namespace Weather
                     if (ConditionIconUrl == "NULL")
                         ConditionIconUrl = "";
                     else
-                    {
                         ConditionIconUrl = ConditionIconUrl.Replace("http://", "https://");
-                        //conditionIconUrl = conditionIconUrl.Replace("medium", "large");
-                    }
 
                     Timestamp = DateTime.Parse(timestampString);
                     Temperature = double.Parse(temperatureString);
@@ -153,6 +172,39 @@ namespace Weather
                         WindDirection = 0;
                     else
                         WindDirection = double.Parse(windDirectionString);
+
+                    var gustString = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("wind-speed"))
+                        .Where(el => (string)el.Attribute("type") == "gust")
+                        .SelectMany(el => el.Elements("value"))
+                        .FirstOrDefault().Value;
+
+                    if (gustString == "NA")
+                        Gust = 0;
+                    else
+                        Gust = double.Parse(gustString) * 1.15077945;
+
+                    var visibilityString = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("weather"))
+                        .SelectMany(el => el.Elements("weather-conditions"))
+                        .SelectMany(el => el.Elements("value"))
+                        .SelectMany(el => el.Elements("visibility"))
+                        .FirstOrDefault().Value;
+
+                    if (string.IsNullOrEmpty(visibilityString) || visibilityString == "NA")
+                        Visibility = 0;
+                    else
+                        Visibility = double.Parse(visibilityString);
+
+                    var pressureString = current.Elements("parameters")
+                        .SelectMany(el => el.Elements("pressure"))
+                        .SelectMany(el => el.Elements("value"))
+                        .FirstOrDefault().Value;
+
+                    if (string.IsNullOrEmpty(pressureString) || pressureString == "NA")
+                        Pressure = 0;
+                    else
+                        Pressure = double.Parse(pressureString);
 
                     // forecast
 

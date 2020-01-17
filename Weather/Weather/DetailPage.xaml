@@ -4,9 +4,10 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="Weather.DetailPage">
+             x:Class="Weather.DetailPage"
+             Title="Forecast Details">
     <ContentPage.Content>
-        <ScrollView Padding="8">
+        <ScrollView>
             <StackLayout BackgroundColor="{Binding BackgroundColor}" Padding="8">
                 <Label Text="{Binding Label}"
                    FontAttributes="Bold"

@@ -16,6 +16,17 @@ namespace Weather
         public MainPage()
         {
             InitializeComponent();
+
+            BindingContext = new MainViewModel();
+
+            var tapGesture = new TapGestureRecognizer() { Command = new Command(execute: async () =>
+            {
+                var nwsService = NWSService.GetService();
+
+                if (nwsService.IsValid)
+                    await Navigation.PushAsync(new CurrentConditionsPage());
+            })};
+            CurrentConditionsStackLayout.GestureRecognizers.Add(tapGesture);
         }
 
         async void Button_Clicked(object sender, EventArgs e)

@@ -5,89 +5,85 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:Weather"
-             x:Class="Weather.MainPage">
-
-    <ContentPage.BindingContext>
-        <local:MainViewModel/>
-    </ContentPage.BindingContext>
+             x:Class="Weather.MainPage"
+             Title="Weather">
 
     <ContentPage.Content>
-    
-    <RefreshView IsRefreshing="{Binding IsRefreshing}" 
-                 Command="{Binding RefreshCommand}">
-        <ScrollView Padding="8">
-            <StackLayout>
-                <BoxView Color="Black" HeightRequest="2" />
-                <Label Text="Current Conditions"
-                       FontSize="Medium" FontAttributes="Bold"/>
-                <BoxView Color="Black" HeightRequest="2" />
-                <Label Text="{Binding Location}"
-                       FontSize="Medium"/>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackLayout Padding="4" Grid.Column="0" >
-                        <Image Source="{Binding ConditionsIcon}"
-                               HeightRequest="100" WidthRequest="100"
-                               HorizontalOptions="CenterAndExpand" />
-                        <Label Text="{Binding TextDescription}"
-                               FontSize="Medium"
-                               HorizontalTextAlignment="Center" />
-                    </StackLayout>
-                    <StackLayout Padding="4" Grid.Column="1" >
-                        <Label Text="{Binding Temperature}"
-                               FontSize="Medium"
-                               FontAttributes="Bold" />
-                        <Label Text="{Binding Wind}"
-                               FontSize="Small" />
-                        <Label Text="{Binding DewPoint}"
-                               FontSize="Small" />
-                        <Label Text="{Binding RelativeHumidity}"
-                               FontSize="Small" />
-                    </StackLayout>
-                </Grid>
-                <BoxView Color="Black" HeightRequest="2" />
-                <Label Text="Forecast"
-                       FontSize="Medium" FontAttributes="Bold"/>
-                <BoxView Color="Black" HeightRequest="2" />
-                <CollectionView ItemsLayout="HorizontalList"
-                                ItemsSource="{Binding ForecastCells}"
-                                SelectionMode="Single"
-                                SelectionChanged="CollectionView_SelectionChanged"
-                                HeightRequest="235">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout BackgroundColor="{Binding BackgroundColor}" Padding="4">
-                                <Label Text="{Binding Label}"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"/>
-                                <Image Source="{Binding Icon}"
+        <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+                     Command="{Binding RefreshCommand}">
+            <ScrollView Padding="8">
+                <StackLayout x:Name="CurrentConditionsStackLayout">
+                    <BoxView Color="Black" HeightRequest="2" />
+                    <Label Text="Current Conditions"
+                           FontSize="Medium" FontAttributes="Bold"/>
+                    <BoxView Color="Black" HeightRequest="2" />
+                    <Label Text="{Binding Location}"
+                           FontSize="Medium"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackLayout Padding="4" Grid.Column="0" >
+                            <Image Source="{Binding ConditionsIcon}"
                                    HeightRequest="100" WidthRequest="100"
                                    HorizontalOptions="CenterAndExpand" />
-                                <Label Text="{Binding Description}"
-                                       HorizontalTextAlignment="Center"
-                                       WidthRequest="100"/>
-                                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                    <Label Text="{Binding TemperatureLabel}"
-                                           HorizontalTextAlignment="End" />
-                                    <Label Text="{Binding Temperature}"
-                                           TextColor="{Binding TemperatureColor}"
-                                           HorizontalTextAlignment="Start" />
+                            <Label Text="{Binding TextDescription}"
+                                   FontSize="Medium"
+                                   HorizontalTextAlignment="Center" />
+                        </StackLayout>
+                        <StackLayout Padding="4" Grid.Column="1" >
+                            <Label Text="{Binding Temperature}"
+                                   FontSize="Medium"
+                                   FontAttributes="Bold" />
+                            <Label Text="{Binding Wind}"
+                                   FontSize="Small" />
+                            <Label Text="{Binding DewPoint}"
+                                   FontSize="Small" />
+                            <Label Text="{Binding RelativeHumidity}"
+                                   FontSize="Small" />
+                        </StackLayout>
+                    </Grid>
+                    <BoxView Color="Black" HeightRequest="2" />
+                    <Label Text="Forecast"
+                           FontSize="Medium" FontAttributes="Bold"/>
+                    <BoxView Color="Black" HeightRequest="2" />
+                    <CollectionView ItemsLayout="HorizontalList"
+                                    ItemsSource="{Binding ForecastCells}"
+                                    SelectionMode="Single"
+                                    SelectionChanged="CollectionView_SelectionChanged"
+                                    HeightRequest="235">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout BackgroundColor="{Binding BackgroundColor}" Padding="4">
+                                    <Label Text="{Binding Label}"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"/>
+                                    <Image Source="{Binding Icon}"
+                                       HeightRequest="100" WidthRequest="100"
+                                       HorizontalOptions="CenterAndExpand" />
+                                    <Label Text="{Binding Description}"
+                                           HorizontalTextAlignment="Center"
+                                           WidthRequest="100"/>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                        <Label Text="{Binding TemperatureLabel}"
+                                               HorizontalTextAlignment="End" />
+                                        <Label Text="{Binding Temperature}"
+                                               TextColor="{Binding TemperatureColor}"
+                                               HorizontalTextAlignment="Start" />
+                                    </StackLayout>
                                 </StackLayout>
-                            </StackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-                <BoxView Color="Black" HeightRequest="2" />
-                <Label Text="{Binding Updated}"/>
-                <Label Text="{Binding Requested}"/>
-                <Button Text="Select Location"
-                        Clicked="Button_Clicked"/>
-            </StackLayout>
-        </ScrollView>
-    </RefreshView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <BoxView Color="Black" HeightRequest="2" />
+                    <Label Text="{Binding Updated}"/>
+                    <Label Text="{Binding Requested}"/>
+                    <Button Text="Select Location"
+                            Clicked="Button_Clicked"/>
+                </StackLayout>
+            </ScrollView>
+        </RefreshView>
         
     </ContentPage.Content>
 </ContentPage>

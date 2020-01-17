@@ -47,7 +47,7 @@ namespace Weather
                 requested = "Last Requested: " + DateTime.Now.ToString("dd MMM hh:mm tt");
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Requested)));
 
-                if (nwsService.Location == null)
+                if (!nwsService.IsValid)
                 {
                     this.location = "Forecast Unavailable";
                     updated = null;
