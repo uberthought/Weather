@@ -79,7 +79,7 @@
                     <BoxView Color="Black" HeightRequest="2" />
                     <Label Text="{Binding Updated}"/>
                     <Label Text="{Binding Requested}"/>
-                    <Button Text="Select Location"
+                    <Button Text="Set Location"
                             Clicked="Button_Clicked"/>
                 </StackLayout>
             </ScrollView>
