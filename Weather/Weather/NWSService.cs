@@ -234,11 +234,13 @@ namespace Weather
                         .Select(el => el.Value)
                         .ToList();
 
+                    double d;
                     ForecastLows = forecast.Elements("parameters")
                         .SelectMany(el => el.Elements("temperature"))
                         .Where(el => (string)el.Attribute("type") == "minimum")
                         .SelectMany(el => el.Elements("value"))
                         .Select(el => el.Value)
+                        .Where(s => double.TryParse(s, out d))
                         .Select(s => double.Parse(s))
                         .ToList();
 
@@ -247,6 +249,7 @@ namespace Weather
                         .Where(el => (string)el.Attribute("type") == "maximum")
                         .SelectMany(el => el.Elements("value"))
                         .Select(el => el.Value)
+                        .Where(s => double.TryParse(s, out d))
                         .Select(s => double.Parse(s))
                         .ToList();
 
