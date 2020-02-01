@@ -27,6 +27,7 @@ namespace Weather.Droid
 
             base.OnCreate(savedInstanceState);
 
+            Android.Gms.Ads.MobileAds.Initialize(ApplicationContext, "ca-app-pub-2856204202654056~9189373311");
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Xamarin.FormsMaps.Init(this, savedInstanceState);
