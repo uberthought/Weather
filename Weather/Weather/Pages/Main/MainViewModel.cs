@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Essentials;
@@ -43,9 +42,6 @@ namespace Weather
                 // create NWS request object and get forecast
                 var nwsService = NWSService.GetService();
                 await nwsService.SetLocation(location.Latitude, location.Longitude);
-
-                requested = "Last Requested: " + DateTime.Now.ToString("dd MMM hh:mm tt");
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Requested)));
 
                 if (!nwsService.IsValid)
                 {
@@ -163,9 +159,6 @@ namespace Weather
             get { return updated; }
             //set { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(updated)); }
         }
-
-        string requested = "";
-        public string Requested { get => requested; }
 
         // current conditions
 

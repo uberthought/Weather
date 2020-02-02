@@ -14,6 +14,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+ 
             <RefreshView IsRefreshing="{Binding IsRefreshing}" 
                          Command="{Binding RefreshCommand}">
                 <ScrollView Padding="8" Grid.Row="0">
@@ -21,7 +22,6 @@
                         <BoxView Color="Black" HeightRequest="2" />
                         <Label Text="Current Conditions"
                                FontSize="Medium" FontAttributes="Bold"/>
-                        <BoxView Color="Black" HeightRequest="2" />
                         <Label Text="{Binding Location}"
                                FontSize="Medium"/>
                         <Grid>
@@ -52,7 +52,6 @@
                         <BoxView Color="Black" HeightRequest="2" />
                         <Label Text="Forecast"
                                FontSize="Medium" FontAttributes="Bold"/>
-                        <BoxView Color="Black" HeightRequest="2" />
                         <CollectionView ItemsLayout="HorizontalList"
                                         ItemsSource="{Binding ForecastCells}"
                                         SelectionMode="Single"
@@ -83,14 +82,13 @@
                         </CollectionView>
                         <BoxView Color="Black" HeightRequest="2" />
                         <Label Text="{Binding Updated}"/>
-                        <Label Text="{Binding Requested}"/>
                         <Button Text="Set Location"
                                 Clicked="Button_Clicked"/>
                     </StackLayout>
                 </ScrollView>
             </RefreshView>
 
-            <local:AdMobView AdUnitId="ca-app-pub-2856204202654056/3976768602" Grid.Row="1" />
+            <local:AdMobView Grid.Row="1" HeightRequest="50"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

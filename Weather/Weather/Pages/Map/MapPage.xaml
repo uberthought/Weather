@@ -14,12 +14,21 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackLayout>
             <maps:Map x:Name="map"
                       MapClicked="map_MapClicked"/>
             <Button x:Name="LocationButton"
                     Text="Use Device Location"
                     Clicked="Button_Clicked"/>
         </StackLayout>
+
+            <local:AdMobView Grid.Row="1" HeightRequest="50"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

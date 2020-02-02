@@ -9,8 +9,6 @@ namespace Weather
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public MapViewModel()
-        {
-        }
+        public MapViewModel() { }
     }
 }

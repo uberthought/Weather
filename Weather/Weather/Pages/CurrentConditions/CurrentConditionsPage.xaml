@@ -4,10 +4,17 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             xmlns:local="clr-namespace:Weather"
              x:Class="Weather.CurrentConditionsPage"
              Title="Current Conditions">
     <ContentPage.Content>
-        <ScrollView Padding="8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ScrollView Padding="8">
             <StackLayout>
                 <Label Text="{Binding Location}"
                        FontSize="Large"/>
@@ -41,5 +48,8 @@
                        HorizontalTextAlignment="Center"/>
             </StackLayout>
         </ScrollView>
+
+            <local:AdMobView Grid.Row="1" HeightRequest="50"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
