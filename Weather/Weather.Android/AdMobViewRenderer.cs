@@ -5,6 +5,7 @@ using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms;
 using Weather;
 using Weather.Droid;
+using System.ComponentModel;
 
 [assembly: ExportRenderer(typeof(AdMobView), typeof(AdMobViewRenderer))]
 namespace Weather.Droid
@@ -13,11 +14,17 @@ namespace Weather.Droid
     {
         public AdMobViewRenderer(Context context) : base(context) { }
 
+        AdView adView;
+
         private AdView CreateAdView()
         {
-            var adView = new AdView(Context)
+            //var adSize = AdSize.Banner;
+            var adSize = AdSize.SmartBanner;
+            if (Element.Width > 1 && Element.Height > 1)
+                adSize = new AdSize((int)Element.Width, (int)Element.Height);
+            adView = new AdView(Context)
             {
-                AdSize = AdSize.SmartBanner,
+                AdSize = adSize,
 #if DEBUG
                 AdUnitId = "ca-app-pub-3940256099942544/6300978111", // fake ad id
 #else
@@ -36,6 +43,14 @@ namespace Weather.Droid
             base.OnElementChanged(e);
 
             if (e.NewElement != null && Control == null)
+                SetNativeControl(CreateAdView());
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if ((e.PropertyName == "Width" || e.PropertyName == "Height") && Element.Width > 1 && Element.Height > 1)
                 SetNativeControl(CreateAdView());
         }
     }
