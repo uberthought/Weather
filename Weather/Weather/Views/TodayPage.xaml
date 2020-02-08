@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:Weather"
+             x:Class="Weather.TodayPage"
+             Title="Weather">
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+                         Command="{Binding RefreshCommand}">
+                <ScrollView Padding="8" Grid.Row="0">
+                    <StackLayout x:Name="CurrentConditionsStackLayout">
+                        <Label Text="{Binding Location}"
+                               FontSize="Medium"/>
+                        <Label Text="Current Conditions"
+                               FontSize="Medium" FontAttributes="Bold"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout Padding="4" Grid.Column="0" >
+                                <Image Source="{Binding ConditionsIcon}"
+                                       HeightRequest="100" WidthRequest="100"
+                                       HorizontalOptions="CenterAndExpand" />
+                                <Label Text="{Binding TextDescription}"
+                                       FontSize="Medium"
+                                       HorizontalTextAlignment="Center" />
+                            </StackLayout>
+                            <StackLayout Padding="4" Grid.Column="1" >
+                                <Label Text="{Binding Temperature}"
+                                       FontSize="Medium"
+                                       FontAttributes="Bold" />
+                                <Label Text="{Binding Wind}"
+                                       FontSize="Medium" />
+                                <Label Text="{Binding DewPoint}"
+                                       FontSize="Medium" />
+                                <Label Text="{Binding RelativeHumidity}"
+                                       FontSize="Medium" />
+                            </StackLayout>
+                        </Grid>
+                        <Label Text="{Binding ForecastLabel}"
+                               FontSize="Medium" FontAttributes="Bold"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout Padding="4" Grid.Column="0" >
+                                <Image Source="{Binding ForecastIcon}"
+                                       HeightRequest="100" WidthRequest="100"
+                                       HorizontalOptions="CenterAndExpand" />
+                                <Label Text="{Binding ForecastDescription}"
+                                       FontSize="Medium"
+                                       HorizontalTextAlignment="Center" />
+                            </StackLayout>
+                            <StackLayout Padding="4" Grid.Column="1" >
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding ForecastTemperatureLabel}"
+                                           HorizontalTextAlignment="End"
+                                           FontSize="Medium"
+                                           FontAttributes="Bold" />
+                                    <Label Text="{Binding ForecastTemperature}"
+                                           TextColor="{Binding ForecastTemperatureColor}"
+                                           HorizontalTextAlignment="Start"
+                                           FontSize="Medium"
+                                           FontAttributes="Bold" />
+                                </StackLayout>
+                                <Label Text="{Binding ForecastDetailText}"
+                                       HorizontalOptions="Center"
+                                       FontSize="Medium"/>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </ScrollView>
+            </RefreshView>
+
+            <local:AdMobView Grid.Row="1"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -20,7 +20,7 @@ namespace Weather
             if (Application.Current.Properties.ContainsKey("DefaultLocation"))
                 DefaultLocation = Application.Current.Properties["DefaultLocation"] as Location;
 
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new MasterDetailPageDetail();
         }
 
         protected override async void OnStart()

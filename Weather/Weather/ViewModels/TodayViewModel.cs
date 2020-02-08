@@ -9,13 +9,13 @@ using System.Linq;
 
 namespace Weather
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class TodayViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         Timer timer;
 
-        public MainViewModel()
+        public TodayViewModel()
         {
             // setup Refresh button binding
             RefreshCommand = new Command(execute: Refresh);
@@ -29,9 +29,9 @@ namespace Weather
 
         public async void Refresh()
         {
-            if (isRefreshing)
+            if (IsRefreshing)
                 return;
-            isRefreshing = true;
+            IsRefreshing = true;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRefreshing)));
 
             try
@@ -45,15 +45,14 @@ namespace Weather
 
                 if (!nwsService.IsValid)
                 {
-                    this.location = "Forecast Unavailable";
-                    updated = null;
-                    temperature = null;
-                    dewPoint = null;
-                    textDescription = null;
-                    relativeHumidity = null;
-                    wind = null;
-                    conditionsIcon = null;
-                    forecastCells = null;
+                    Location = "Forecast Unavailable";
+                    Updated = null;
+                    Temperature = null;
+                    DewPoint = null;
+                    TextDescription = null;
+                    RelativeHumidity = null;
+                    Wind = null;
+                    ConditionsIcon = null;
 
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Updated)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Location)));
@@ -64,9 +63,7 @@ namespace Weather
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Wind)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConditionsIcon)));
 
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastCells)));
-
-                    isRefreshing = false;
+                    IsRefreshing = false;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRefreshing)));
 
                     return;
@@ -91,46 +88,26 @@ namespace Weather
                     windDirection = "NW";
 
                 // update current condition
-                updated = "Forecast Updated: " + nwsService.Timestamp?.ToString("dd MMM hh:mm tt");
-                this.location = nwsService.Location;
-                textDescription = nwsService.TextDescription;
-                temperature = $"{nwsService.Temperature:0}℉";
-                dewPoint = $"Dew Point {nwsService.DewPoint:0}℉";
-                relativeHumidity = $"({nwsService.RelativeHumidity:0}% RH)";
-                wind = $"Wind {windDirection} {nwsService.WindSpeed:0} MPH";
+                Updated = "Forecast Updated: " + nwsService.Timestamp?.ToString("dd MMM hh:mm tt");
+                Location = nwsService.Location;
+                TextDescription = nwsService.TextDescription;
+                Temperature = $"{nwsService.Temperature:0}℉";
+                DewPoint = $"Dew Point {nwsService.DewPoint:0}℉";
+                RelativeHumidity = $"Humidity {nwsService.RelativeHumidity:0}%";
+                Wind = $"Wind {windDirection} {nwsService.WindSpeed:0} MPH";
                 if (!string.IsNullOrEmpty(nwsService.ConditionIconUrl))
-                    conditionsIcon = ImageSource.FromUri(new Uri(nwsService.ConditionIconUrl));
+                    ConditionsIcon = ImageSource.FromUri(new Uri(nwsService.ConditionIconUrl));
 
                 // update forecast
-                var forecastCount = new List<int>
-                        {
-                            nwsService.ForecastLabels.Count(),
-                            nwsService.ForecastIcons.Count(),
-                            nwsService.ForecastDescriptions.Count(),
-                            nwsService.ForecastLows.Count() * 2,
-                            nwsService.ForecastHighs.Count() * 2
-                        }.Min();
-
-                forecastCells = new List<ForecastCell>();
-                for (var i = 0; i < forecastCount; i++)
-                {
-                    var isLow = i % 2 != 0;
-                    if (nwsService.ForecastLabels[0] == "Tonight")
-                        isLow = !isLow;
-                    var temperature = isLow ? nwsService.ForecastLows[(int)(i / 2)] : nwsService.ForecastHighs[(int)(i / 2)];
-
-                    forecastCells.Add(new ForecastCell
-                    {
-                        Index = i,
-                        Label = nwsService.ForecastLabels[i],
-                        Icon = ImageSource.FromUri(new Uri(nwsService.ForecastIcons[i])),
-                        Description = nwsService.ForecastDescriptions[i],
-                        TemperatureLabel = isLow ? "Low:" : "Hi:",
-                        Temperature = $"{temperature:0}℉",
-                        TemperatureColor = isLow ? Color.Blue : Color.Red,
-                        BackgroundColor = isLow ? Color.DarkGray : Color.LightBlue
-                    });
-                }
+                var isLow = nwsService.ForecastLabels[0] == "Tonight";
+                var temperature = isLow ? nwsService.ForecastLows[0] : nwsService.ForecastHighs[0];
+                ForecastLabel = nwsService.ForecastLabels[0];
+                ForecastIcon = ImageSource.FromUri(new Uri(nwsService.ForecastIcons[0]));
+                ForecastDescription = nwsService.ForecastDescriptions[0];
+                ForecastTemperatureLabel = isLow ? "Low:" : "Hi:";
+                ForecastTemperatureColor = isLow ? Color.Blue : Color.Red;
+                ForecastTemperature = $"{temperature:0}℉";
+                ForecastDetailText = nwsService.WordedForecast[0];
 
                 // tell UI to update
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Updated)));
@@ -142,60 +119,47 @@ namespace Weather
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Wind)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConditionsIcon)));
 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastCells)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastLabel)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastIcon)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastDescription)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastTemperatureLabel)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastTemperatureColor)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastTemperature)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastDetailText)));
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex);
             }
 
-            isRefreshing = false;
+            IsRefreshing = false;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRefreshing)));
         }
 
-        string updated = "";
-        public String Updated
-        {
-            get { return updated; }
-            //set { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(updated)); }
-        }
+        public String Updated { private set; get; }
 
         // current conditions
 
-        string location = "";
-        public String Location { get => location; }
-
-        string temperature = "";
-        public string Temperature { get => temperature; }
-
-        string dewPoint = "";
-        public string DewPoint { get => dewPoint; }
-
-        string textDescription = "";
-        public string TextDescription { get => textDescription; }
-
-        string relativeHumidity = "";
-        public string RelativeHumidity { get => relativeHumidity; }
-
-        string wind = "";
-        public string Wind { get => wind; }
-
-        ImageSource conditionsIcon;
-        public ImageSource ConditionsIcon { get => conditionsIcon; }
+        public String Location { private set; get; }
+        public string Temperature { private set; get; }
+        public string DewPoint { private set; get; }
+        public string TextDescription { private set; get; }
+        public string RelativeHumidity { private set; get; }
+        public string Wind { private set; get; }
+        public ImageSource ConditionsIcon { private set; get; }
 
         // forecast
-
-        List<ForecastCell> forecastCells;
-        public List<ForecastCell> ForecastCells { get { return forecastCells; } }
+        public string ForecastLabel { private set; get; }
+        public ImageSource ForecastIcon { private set; get; }
+        public string ForecastDescription { private set; get; }
+        public string ForecastTemperatureLabel { private set; get; }
+        public string ForecastTemperature { private set; get; }
+        public Color ForecastTemperatureColor { private set; get; }
+        public string ForecastDetailText { private set; get; }
 
         // Refresh
-
         public ICommand RefreshCommand { private set; get; }
-
-        bool refreshIsEnabled = true;
-        public bool RefreshIsEnabled { get => refreshIsEnabled; }
-
-        bool isRefreshing;
-        public bool IsRefreshing { get => isRefreshing; }
+        public bool RefreshIsEnabled { private set; get; }
+        public bool IsRefreshing { private set; get; }
     }
 }

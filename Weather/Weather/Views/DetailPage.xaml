@@ -37,11 +37,12 @@
                 </StackLayout>
                 <Label Text="{Binding DetailText}"
                    HorizontalOptions="Center"
-                   FontSize="Medium"/>
+                   FontSize="Large"
+                   HorizontalTextAlignment="Center"/>
             </StackLayout>
         </ScrollView>
 
-            <local:AdMobView Grid.Row="1" HeightRequest="50"/>
+            <local:AdMobView Grid.Row="1"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

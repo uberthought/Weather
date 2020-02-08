@@ -28,7 +28,7 @@
                     Clicked="Button_Clicked"/>
         </StackLayout>
 
-            <local:AdMobView Grid.Row="1" HeightRequest="50"/>
+            <local:AdMobView Grid.Row="1"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

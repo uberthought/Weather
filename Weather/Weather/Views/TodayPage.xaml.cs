@@ -11,13 +11,13 @@ namespace Weather
     // Learn more about making custom code visible in the Xamarin.Forms previewer
     // by visiting https://aka.ms/xamarinforms-previewer
     [DesignTimeVisible(false)]
-    public partial class MainPage : ContentPage
+    public partial class TodayPage : ContentPage
     {
-        public MainPage()
+        public TodayPage()
         {
             InitializeComponent();
 
-            BindingContext = new MainViewModel();
+            BindingContext = new TodayViewModel();
 
             var tapGesture = new TapGestureRecognizer() { Command = new Command(execute: async () =>
             {
@@ -38,10 +38,10 @@ namespace Weather
         {
             base.OnAppearing();
 
-            var mainViewModel = BindingContext as MainViewModel;
+            var todayViewModel = BindingContext as TodayViewModel;
 
-            if (mainViewModel != null && !mainViewModel.IsRefreshing)
-                mainViewModel.Refresh();
+            if (todayViewModel != null && !todayViewModel.IsRefreshing)
+                todayViewModel.Refresh();
         }
 
         async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
