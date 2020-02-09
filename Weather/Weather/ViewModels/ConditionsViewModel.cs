@@ -6,10 +6,10 @@ using Xamarin.Forms;
 
 namespace Weather
 {
-    class CurrentConditionsViewModel : INotifyPropertyChanged
+    class ConditionsViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public CurrentConditionsViewModel()
+        public ConditionsViewModel()
         {
             var nwsService = NWSService.GetService();
 

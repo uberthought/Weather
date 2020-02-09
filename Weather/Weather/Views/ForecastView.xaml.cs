@@ -10,11 +10,11 @@ using Xamarin.Forms.Xaml;
 namespace Weather
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ForecastPage : ContentPage
+    public partial class ForecastView : ContentView
     {
         public ObservableCollection<string> Items { get; set; }
 
-        public ForecastPage()
+        public ForecastView()
         {
             InitializeComponent();
 
@@ -29,7 +29,9 @@ namespace Weather
             if (selectedCell == null)
                 return;
 
-            await Navigation.PushModalAsync(new DetailPage(selectedCell.Index));
+            var mainTabbedView = MainTabbedView.FindMainTabbedView(Parent);
+
+            mainTabbedView.SetContentView(new DetailView(selectedCell.Index));
 
             collectionView.SelectedItem = null;
         }

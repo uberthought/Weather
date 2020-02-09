@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace Weather
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainTabbedPage : TabbedPage
+    public partial class MainAdMobPage : ContentPage
     {
-        public MainTabbedPage()
+        public MainAdMobPage()
         {
             InitializeComponent();
         }

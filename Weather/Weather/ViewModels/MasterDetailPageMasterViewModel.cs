@@ -14,10 +14,10 @@ namespace Weather
             {
                 MenuItems = new ObservableCollection<MasterDetailViewMenuItem>(new[]
                 {
-                    new MasterDetailViewMenuItem { Id = 0, Title = "Today", TargetType=typeof(TodayPage) },
-                    new MasterDetailViewMenuItem { Id = 1, Title = "Current Conditions", TargetType=typeof(CurrentConditionsPage) },
-                    new MasterDetailViewMenuItem { Id = 2, Title = "Forecast", TargetType=typeof(ForecastPage) },
-                    new MasterDetailViewMenuItem { Id = 3, Title = "Set Location", TargetType=typeof(MapPage) },
+                    new MasterDetailViewMenuItem { Id = 0, Title = "Today", TargetType=typeof(TodayView) },
+                    new MasterDetailViewMenuItem { Id = 1, Title = "Current Conditions", TargetType=typeof(ConditionsView) },
+                    new MasterDetailViewMenuItem { Id = 2, Title = "Forecast", TargetType=typeof(ForecastView) },
+                    new MasterDetailViewMenuItem { Id = 3, Title = "Set Location", TargetType=typeof(MapView) },
                 });
             }
 

@@ -10,13 +10,11 @@ using Xamarin.Forms.Xaml;
 namespace Weather
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CurrentConditionsPage : ContentPage
+    public partial class MainPage : ContentPage
     {
-        public CurrentConditionsPage()
+        public MainPage()
         {
             InitializeComponent();
-
-            BindingContext = new CurrentConditionsViewModel();
         }
     }
 }

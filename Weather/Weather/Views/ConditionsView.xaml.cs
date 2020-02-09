@@ -10,16 +10,13 @@ using Xamarin.Forms.Xaml;
 namespace Weather
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MasterDetailPageMaster : ContentPage
+    public partial class ConditionsView : ContentView
     {
-        public ListView ListView;
-
-        public MasterDetailPageMaster()
+        public ConditionsView()
         {
             InitializeComponent();
 
-            BindingContext = new MasterDetailPageMasterViewModel();
-            ListView = MenuItemsListView;
+            BindingContext = new ConditionsViewModel();
         }
     }
 }

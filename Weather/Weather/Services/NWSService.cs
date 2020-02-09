@@ -69,7 +69,7 @@ namespace Weather
         {
             // get the device's location
             var location = await App.GetLocation();
-            service.SetLocation(location.Latitude, location.Longitude);
+            SetLocation(location.Latitude, location.Longitude);
         }
 
     public void SetLocation(double latitude, double longitude)

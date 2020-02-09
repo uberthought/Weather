@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -11,12 +12,12 @@ using Xamarin.Forms.Xaml;
 namespace Weather
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MapPage : ContentPage
+    public partial class MapView : ContentView
     {
         Pin pin;
         static Distance DefaultRadius = Distance.FromMiles(10);
 
-        public MapPage()
+        public MapView()
         {
             InitializeComponent();
 
@@ -36,6 +37,8 @@ namespace Weather
             LocationButton.IsVisible = !App.LocationNotAuthorized;
         }
 
+        Timer delayTimer;
+
         private void map_MapClicked(object sender, MapClickedEventArgs e)
         {
             pin.Position = e.Position;
@@ -43,24 +46,37 @@ namespace Weather
             var location = new Location();
             location.Latitude = e.Position.Latitude;
             location.Longitude = e.Position.Longitude;
-            App.SetLocation(location);
 
-            var nwsService = NWSService.GetService();
-            nwsService.SetLocation(location.Latitude, location.Longitude);
+            App.SetLocation(location);
 
             var radius = map.VisibleRegion?.Radius ?? DefaultRadius;
             var mapSpan = MapSpan.FromCenterAndRadius(e.Position, radius);
             map.MoveToRegion(mapSpan);
+
+            SetNWSLocation(location);
+        }
+
+        private void DelayedSetLocation(object state)
+        {
+            var location = (Location)state;
+
+            var nwsService = NWSService.GetService();
+            nwsService.SetLocation(location.Latitude, location.Longitude);
+        }
+
+        private void SetNWSLocation(Location location)
+        {
+            if (delayTimer != null)
+                delayTimer.Dispose();
+            delayTimer = new Timer(DelayedSetLocation, location, TimeSpan.FromSeconds(5), TimeSpan.FromTicks(-1));
         }
 
         private async void Button_Clicked(object sender, EventArgs e)
         {
-            var location = await App.ResetLocation();
+            await App.ResetLocation();
+            var location = await App.GetLocation();
 
             App.SetLocation(location);
-
-            var nwsService = NWSService.GetService();
-            nwsService.SetLocation(location.Latitude, location.Longitude);
 
             var center = new Position(location.Latitude, location.Longitude);
             var radius = map.VisibleRegion?.Radius ?? DefaultRadius;
@@ -68,6 +84,8 @@ namespace Weather
             map.MoveToRegion(mapSpan);
 
             pin.Position = center;
+
+            SetNWSLocation(location);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -11,69 +12,94 @@ namespace Weather
         static Location Location;
         static Task GetLocationTask;
         public static bool LocationNotAuthorized;
-        static Location DefaultLocation = new Location(38.4815847, -100.568576);
+        public static Location DefaultLocation = new Location(38.4815847, -100.568576);
+
+        DateTime LastLocationCheck = DateTime.MinValue;
 
         public App()
         {
             InitializeComponent();
 
-            if (Application.Current.Properties.ContainsKey("DefaultLocation"))
-                DefaultLocation = Application.Current.Properties["DefaultLocation"] as Location;
+            if (Application.Current.Properties.ContainsKey("Latitude") && Application.Current.Properties.ContainsKey("Longitude"))
+            {
+                var latitude = (double)Application.Current.Properties["Latitude"];
+                var longitude = (double)Application.Current.Properties["Longitude"];
+                Location = new Location(latitude, longitude);
+            }
+            else
+                Location = DefaultLocation;
 
-            //MainPage = new MasterDetailPageDetail();
-            MainPage = new MainTabbedPage();
+            //MainPage = new MainPage();
+            MainPage = new MainAdMobPage();
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
+            LastLocationCheck = DateTime.UtcNow;
+            await ResetLocation();
+            NWSService.GetService().SetLocation(Location.Latitude, Location.Longitude);
         }
 
         protected override void OnSleep()
         {
         }
 
-        protected override void OnResume()
+        protected override async void OnResume()
         {
+            if (!LocationNotAuthorized && DateTime.UtcNow - LastLocationCheck > TimeSpan.FromMinutes(15))
+            {
+                LastLocationCheck = DateTime.UtcNow;
+                await ResetLocation();
+                NWSService.GetService().SetLocation(Location.Latitude, Location.Longitude);
+            }
         }
 
         public static async Task<Location> GetLocation()
         {
-            if (GetLocationTask == null)
-                await ResetLocation();
-            else
+            if (GetLocationTask != null && !GetLocationTask.IsCompleted)
                 await GetLocationTask;
+            if (Location == null)
+                Location = DefaultLocation;
             return Location;
         }
 
-        public static void SetLocation(Location location)
+        public static async void SetLocation(Location location)
         {
-            DefaultLocation = location;
-            Application.Current.Properties["DefaultLocation"] = Location;
             Location = location;
+            Application.Current.Properties["Latitude"] = Location.Latitude;
+            Application.Current.Properties["Longitude"] = Location.Longitude;
+            await Application.Current.SavePropertiesAsync();
         }
 
-        public static async Task<Location> ResetLocation()
+        public static async Task ResetLocation()
         {
+            Location location = null;
+
             GetLocationTask = MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 try
                 {
-                    var location = DefaultLocation;
                     if (!LocationNotAuthorized)
-                        location = await Geolocation.GetLocationAsync();
-                    Location = location;
+                    {
+                        location = await Geolocation.GetLastKnownLocationAsync();
+                        if (location == null)
+                        {
+                            var request = new GeolocationRequest(GeolocationAccuracy.Lowest);
+                            location = await Geolocation.GetLocationAsync(request);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     if (ex is System.UnauthorizedAccessException)
                         LocationNotAuthorized = true;
-                    Location = DefaultLocation;
                 }
             });
 
             await GetLocationTask;
-            Application.Current.Properties["DefaultLocation"] = Location;
-            return Location;
+
+            if (location != null)
+                SetLocation(location);
         }
     }
 }

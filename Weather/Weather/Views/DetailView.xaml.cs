@@ -10,17 +10,18 @@ using Xamarin.Forms.Xaml;
 namespace Weather
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DetailPage : ContentPage
+    public partial class DetailView : ContentView
     {
-        public DetailPage(int index)
+        public DetailView(int index)
         {
             InitializeComponent();
 
             BindingContext = new DetailViewModel(index);
 
             var tapGestureRecognizer = new TapGestureRecognizer();
-            tapGestureRecognizer.Tapped += async (s, e) => {
-                await Navigation.PopModalAsync();
+            tapGestureRecognizer.Tapped += (s, e) => {
+                var mainTabbedView = MainTabbedView.FindMainTabbedView(Parent);
+                mainTabbedView.ResetContentView();
             };
             scrollView.GestureRecognizers.Add(tapGestureRecognizer);
         }
