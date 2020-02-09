@@ -18,10 +18,11 @@ namespace Weather.Droid
 
         private AdView CreateAdView()
         {
+            if (Element.Width <= 0 || Element.Height <= 0)
+                return null;
             //var adSize = AdSize.Banner;
-            var adSize = AdSize.SmartBanner;
-            if (Element.Width > 1 && Element.Height > 1)
-                adSize = new AdSize((int)Element.Width, (int)Element.Height);
+            //var adSize = AdSize.SmartBanner;
+            var adSize = new AdSize((int)Element.Width, (int)Element.Height);
             adView = new AdView(Context)
             {
                 AdSize = adSize,
@@ -38,18 +39,20 @@ namespace Weather.Droid
             return adView;
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<AdMobView> e)
-        {
-            base.OnElementChanged(e);
+        // This doesn't work with MasterDetailPage
+        //protected override void OnElementChanged(ElementChangedEventArgs<AdMobView> e)
+        //{
+        //    base.OnElementChanged(e);
 
-            if (e.NewElement != null && Control == null)
-                SetNativeControl(CreateAdView());
-        }
+        //    if (e.NewElement != null && Control == null)
+        //        SetNativeControl(CreateAdView());
+        //}
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
 
+            // wait until the view has been sized before creating the AdView
             if ((e.PropertyName == "Width" || e.PropertyName == "Height") && Element.Width > 1 && Element.Height > 1)
                 SetNativeControl(CreateAdView());
         }
