@@ -17,6 +17,12 @@ namespace Weather
             InitializeComponent();
 
             BindingContext = new DetailViewModel(index);
+
+            var tapGestureRecognizer = new TapGestureRecognizer();
+            tapGestureRecognizer.Tapped += async (s, e) => {
+                await Navigation.PopModalAsync();
+            };
+            scrollView.GestureRecognizers.Add(tapGestureRecognizer);
         }
     }
 }

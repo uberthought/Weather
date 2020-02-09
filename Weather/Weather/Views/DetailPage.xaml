@@ -15,7 +15,7 @@
             </Grid.RowDefinitions>
  
             <ScrollView>
-            <StackLayout BackgroundColor="{Binding BackgroundColor}" Padding="8">
+                <StackLayout BackgroundColor="{Binding BackgroundColor}" Padding="8" x:Name="scrollView">
                 <Label Text="{Binding Label}"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"

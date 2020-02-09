@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:Weather"
-             x:Class="Weather.Views.ForecastPage"
+             x:Class="Weather.ForecastPage"
              Title="Forecast">
 
     <Grid>
@@ -13,38 +13,35 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <RefreshView IsRefreshing="{Binding IsRefreshing}" 
-                         Command="{Binding RefreshCommand}">
-            <CollectionView ItemsLayout="VerticalList"
-                                        ItemsSource="{Binding ForecastCells}"
-                                        SelectionMode="Single"
-                                        SelectionChanged="CollectionView_SelectionChanged"
-                                        HeightRequest="235">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout BackgroundColor="{Binding BackgroundColor}" Padding="4">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackLayout Grid.Column="0">
-                                    <Label Text="{Binding Label}" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center"/>
-                                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                        <Label Text="{Binding TemperatureLabel}" FontSize="Medium" HorizontalTextAlignment="End" />
-                                        <Label Text="{Binding Temperature}" TextColor="{Binding TemperatureColor}" FontSize="Medium" HorizontalTextAlignment="Start"/>
-                                    </StackLayout>
-                                    <Label Text="{Binding Description}" HorizontalTextAlignment="Center" FontSize="Medium"/>
+        <CollectionView ItemsLayout="VerticalList"
+                                    ItemsSource="{Binding ForecastCells}"
+                                    SelectionMode="Single"
+                                    SelectionChanged="CollectionView_SelectionChanged"
+                                    HeightRequest="235">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout BackgroundColor="{Binding BackgroundColor}" Padding="4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout Grid.Column="0">
+                                <Label Text="{Binding Label}" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center"/>
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                    <Label Text="{Binding TemperatureLabel}" FontSize="Medium" HorizontalTextAlignment="End" />
+                                    <Label Text="{Binding Temperature}" TextColor="{Binding TemperatureColor}" FontSize="Medium" HorizontalTextAlignment="Start"/>
                                 </StackLayout>
-                                <StackLayout Grid.Column="1">
-                                    <Image Source="{Binding Icon}" HeightRequest="100" WidthRequest="100" HorizontalOptions="CenterAndExpand" />
-                                </StackLayout>
-                            </Grid>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>
+                                <Label Text="{Binding Description}" HorizontalTextAlignment="Center" FontSize="Medium"/>
+                            </StackLayout>
+                            <StackLayout Grid.Column="1">
+                                <Image Source="{Binding Icon}" HeightRequest="100" WidthRequest="100" HorizontalOptions="CenterAndExpand" />
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
         <local:AdMobView Grid.Row="1"/>
     </Grid>

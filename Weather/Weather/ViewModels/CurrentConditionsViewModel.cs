@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using Xamarin.Forms;
 
 namespace Weather
 {
-    class CurrentConditionsViewModel
+    class CurrentConditionsViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         public CurrentConditionsViewModel()
         {
             var nwsService = NWSService.GetService();
+
+            nwsService.DataUpdated += NwsService_DataUpdated;
+        }
+
+        void NwsService_DataUpdated(object sender, EventArgs e)
+        {
+            var nwsService = (NWSService)sender;
 
             var windDirection = "";
             if (nwsService.WindDirection > 337.5 || nwsService.WindDirection <= 22.5)
@@ -42,6 +51,17 @@ namespace Weather
             Gust = $"Gust {nwsService.Gust:0} MPH";
             Visibility = $"Visibility {nwsService.Visibility:0} Miles";
             Pressure = $"Pressure {nwsService.Pressure} HG";
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Location)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TextDescription)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temperature)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DewPoint)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RelativeHumidity)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Wind)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConditionsIcon)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Gust)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Visibility)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Pressure)));
         }
 
         public string Location { private set; get; }

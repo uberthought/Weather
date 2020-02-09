@@ -12,6 +12,7 @@ namespace Weather
 
         public DetailViewModel(int index)
         {
+            // we will never get to this point without the service being populated, so don't bother with the callback
             var nwsService = NWSService.GetService();
 
             var isLow = index % 2 != 0;
@@ -27,6 +28,15 @@ namespace Weather
             Temperature = $"{temperature:0}℉";
             DetailText = nwsService.WordedForecast[index];
             BackgroundColor = isLow ? Color.DarkGray : Color.LightBlue;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Label)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Icon)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Description)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TemperatureLabel)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TemperatureColor)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temperature)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DetailText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BackgroundColor)));
         }
 
         public string Label { private set; get; }

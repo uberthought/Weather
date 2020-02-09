@@ -20,7 +20,12 @@ namespace Weather
         {
             InitializeComponent();
 
-            var location = App.GetLocation().Result;
+            Refresh();
+        }
+
+        async void Refresh()
+        {
+            var location = await App.GetLocation();
             var center = new Position(location.Latitude, location.Longitude);
             var mapSpan = MapSpan.FromCenterAndRadius(center, DefaultRadius);
             map.MoveToRegion(mapSpan);
@@ -40,6 +45,9 @@ namespace Weather
             location.Longitude = e.Position.Longitude;
             App.SetLocation(location);
 
+            var nwsService = NWSService.GetService();
+            nwsService.SetLocation(location.Latitude, location.Longitude);
+
             var radius = map.VisibleRegion?.Radius ?? DefaultRadius;
             var mapSpan = MapSpan.FromCenterAndRadius(e.Position, radius);
             map.MoveToRegion(mapSpan);
@@ -48,6 +56,11 @@ namespace Weather
         private async void Button_Clicked(object sender, EventArgs e)
         {
             var location = await App.ResetLocation();
+
+            App.SetLocation(location);
+
+            var nwsService = NWSService.GetService();
+            nwsService.SetLocation(location.Latitude, location.Longitude);
 
             var center = new Position(location.Latitude, location.Longitude);
             var radius = map.VisibleRegion?.Radius ?? DefaultRadius;

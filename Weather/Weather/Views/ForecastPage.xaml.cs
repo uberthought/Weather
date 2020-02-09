@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Weather.Views
+namespace Weather
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ForecastPage : ContentPage
@@ -23,12 +23,15 @@ namespace Weather.Views
 
         async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            var collectionView = (CollectionView)sender;
             var selectedCell = e.CurrentSelection.FirstOrDefault() as ForecastCell;
 
             if (selectedCell == null)
                 return;
 
-            await Navigation.PushAsync(new DetailPage(selectedCell.Index));
+            await Navigation.PushModalAsync(new DetailPage(selectedCell.Index));
+
+            collectionView.SelectedItem = null;
         }
     }
 }

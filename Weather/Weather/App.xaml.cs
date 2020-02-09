@@ -20,12 +20,12 @@ namespace Weather
             if (Application.Current.Properties.ContainsKey("DefaultLocation"))
                 DefaultLocation = Application.Current.Properties["DefaultLocation"] as Location;
 
-            MainPage = new MasterDetailPageDetail();
+            //MainPage = new MasterDetailPageDetail();
+            MainPage = new MainTabbedPage();
         }
 
-        protected override async void OnStart()
+        protected override void OnStart()
         {
-            await ResetLocation();
         }
 
         protected override void OnSleep()
@@ -38,7 +38,10 @@ namespace Weather
 
         public static async Task<Location> GetLocation()
         {
-            await GetLocationTask;
+            if (GetLocationTask == null)
+                await ResetLocation();
+            else
+                await GetLocationTask;
             return Location;
         }
 
@@ -55,10 +58,10 @@ namespace Weather
             {
                 try
                 {
-                    if (LocationNotAuthorized)
-                        Location = DefaultLocation;
-                    else
-                        Location = await Geolocation.GetLocationAsync();
+                    var location = DefaultLocation;
+                    if (!LocationNotAuthorized)
+                        location = await Geolocation.GetLocationAsync();
+                    Location = location;
                 }
                 catch (Exception ex)
                 {
