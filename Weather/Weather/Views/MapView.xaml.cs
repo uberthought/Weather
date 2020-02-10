@@ -21,6 +21,8 @@ namespace Weather
         {
             InitializeComponent();
 
+            LocationButton.IsVisible = !App.LocationNotAuthorized;
+
             Refresh();
         }
 
@@ -33,11 +35,7 @@ namespace Weather
 
             pin = new Pin() { Label = "", Position = center };
             map.Pins.Add(pin);
-
-            LocationButton.IsVisible = !App.LocationNotAuthorized;
         }
-
-        Timer delayTimer;
 
         private void map_MapClicked(object sender, MapClickedEventArgs e)
         {
@@ -52,23 +50,6 @@ namespace Weather
             var radius = map.VisibleRegion?.Radius ?? DefaultRadius;
             var mapSpan = MapSpan.FromCenterAndRadius(e.Position, radius);
             map.MoveToRegion(mapSpan);
-
-            SetNWSLocation(location);
-        }
-
-        private void DelayedSetLocation(object state)
-        {
-            var location = (Location)state;
-
-            var nwsService = NWSService.GetService();
-            nwsService.SetLocation(location.Latitude, location.Longitude);
-        }
-
-        private void SetNWSLocation(Location location)
-        {
-            if (delayTimer != null)
-                delayTimer.Dispose();
-            delayTimer = new Timer(DelayedSetLocation, location, TimeSpan.FromSeconds(5), TimeSpan.FromTicks(-1));
         }
 
         private async void Button_Clicked(object sender, EventArgs e)
@@ -84,8 +65,6 @@ namespace Weather
             map.MoveToRegion(mapSpan);
 
             pin.Position = center;
-
-            SetNWSLocation(location);
         }
     }
 }

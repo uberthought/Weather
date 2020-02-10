@@ -53,26 +53,13 @@ namespace Weather
             return service;
         }
 
-        Timer timer;
-
         NWSService()
         {
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "Weather app");
-            SetInitialLocation();
-
-            // execute a refresh command every hour
-            timer = new Timer((o) => { Refresh(); }, null, TimeSpan.FromHours(1), TimeSpan.FromHours(1));
         }
 
-        async void SetInitialLocation()
-        {
-            // get the device's location
-            var location = await App.GetLocation();
-            SetLocation(location.Latitude, location.Longitude);
-        }
-
-    public void SetLocation(double latitude, double longitude)
+        public void SetLocation(double latitude, double longitude)
         {
             if (QueryLatitude != latitude || QueryLongitude != longitude)
             {
@@ -97,12 +84,11 @@ namespace Weather
 
                 lastRefresh = DateTime.MinValue;
             }
-            Refresh();
         }
 
         public bool IsValid => Location != null;
 
-        async void Refresh()
+        public async void Refresh()
         {
             if (IsValid && DateTime.UtcNow - lastRefresh < TimeSpan.FromMinutes(15))
                 return;

@@ -6,7 +6,6 @@ namespace Weather
 	{
 		public AdMobView()
 		{
-			HeightRequest = 90;
 		}
 	}
 }

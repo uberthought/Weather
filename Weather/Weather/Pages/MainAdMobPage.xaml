@@ -16,7 +16,8 @@
 
             <pages:MainTabbedView/>
 
-            <local:AdMobView Grid.Row="1"/>
+            <local:AdMobView Grid.Row="1"
+                             HeightRequest="50"/>
         </Grid>
 
     </ContentPage.Content>
