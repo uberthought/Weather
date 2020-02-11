@@ -71,12 +71,26 @@ namespace Weather
                 delayTimer = null;
             }
 
+            // wait a bit, then set the app location
             var location = new Location(e.Position.Latitude, e.Position.Longitude);
             delayTimer = new Timer(DelayedSetLocation, location, TimeSpan.FromSeconds(5), TimeSpan.FromTicks(-1));
         }
 
-        private void DelayedSetLocation(object state) => LocationService.Service.SetLocation((Location)state);
+        private void DelayedSetLocation(object state)
+        {
+            // set the new location
+            LocationService.Service.SetLocation((Location)state);
+         
+            // disable UseDeviceLocation
+            ((App)Application.Current).SetUseDeviceLocation(false);
+        }
 
-        private void Button_Clicked(object sender, EventArgs e) => LocationService.Service.ResetLocation();
+            private void Button_Clicked(object sender, EventArgs e)
+        {
+            // enable UseDeviceLocation
+            ((App)Application.Current).SetUseDeviceLocation(true);
+
+            LocationService.Service.ResetLocation();
+        }
     }
 }

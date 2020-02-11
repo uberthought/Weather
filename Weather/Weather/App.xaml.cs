@@ -11,13 +11,24 @@ namespace Weather
     public partial class App : Application
     {
         Timer refreshTimer;
+        public bool UseDeviceLocation { private set; get; } = true;
 
         public App()
         {
             InitializeComponent();
 
+            if (Application.Current.Properties.ContainsKey("UseDeviceLocation"))
+                UseDeviceLocation = (bool)Properties["UseDeviceLocation"];
+
             //MainPage = new MainPage();
             MainPage = new MainAdMobPage();
+        }
+
+        public async void SetUseDeviceLocation(bool useDeviceLocation)
+        {
+            UseDeviceLocation = useDeviceLocation;
+            Properties["UseDeviceLocation"] = useDeviceLocation;
+            await SavePropertiesAsync();
         }
 
         protected override void OnStart()
@@ -47,9 +58,10 @@ namespace Weather
             refreshTimer = null;
         }
 
-        public void Refresh()
+        private void Refresh()
         {
-            LocationService.Service.ResetLocation();
+            if (UseDeviceLocation)
+                LocationService.Service.ResetLocation();
             NWSService.Service.Refresh();
         }
 

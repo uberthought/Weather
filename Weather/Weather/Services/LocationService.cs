@@ -44,6 +44,9 @@ namespace Weather
             }
             else
                 SetLocation(DefaultLocation);
+
+            if (((App)Application.Current).UseDeviceLocation)
+                ResetLocation();
         }
 
         public async void SetLocation(Location location)
