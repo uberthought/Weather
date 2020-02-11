@@ -50,6 +50,7 @@ namespace Weather
         public void Refresh()
         {
             LocationService.Service.ResetLocation();
+            NWSService.Service.Refresh();
         }
 
     }
