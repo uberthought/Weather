@@ -15,8 +15,7 @@ namespace Weather
 
         public TodayViewModel()
         {
-            var nwsService = NWSService.GetService();
-            nwsService.DataUpdated += NwsService_DataUpdated;
+            NWSService.Service.DataUpdated += NwsService_DataUpdated;
         }
 
         private void NwsService_DataUpdated(object sender, EventArgs e)

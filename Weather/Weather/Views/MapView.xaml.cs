@@ -16,55 +16,67 @@ namespace Weather
     {
         Pin pin;
         static Distance DefaultRadius = Distance.FromMiles(10);
+        Timer delayTimer;
 
         public MapView()
         {
             InitializeComponent();
 
-            LocationButton.IsVisible = !App.LocationNotAuthorized;
+            UpdateLocation();
 
-            Refresh();
+            LocationService.Service.AuthorizedChanged += Service_AuthorizedChanged;
+            LocationService.Service.LocationChanged += MapView_LocationChanged;
         }
 
-        async void Refresh()
-        {
-            var location = await App.GetLocation();
-            var center = new Position(location.Latitude, location.Longitude);
-            var mapSpan = MapSpan.FromCenterAndRadius(center, DefaultRadius);
-            map.MoveToRegion(mapSpan);
+        private void Service_AuthorizedChanged(object sender, EventArgs e) => LocationButton.IsVisible = LocationService.Service.LocationAuthorized;
 
-            pin = new Pin() { Label = "", Position = center };
-            map.Pins.Add(pin);
+        private void MapView_LocationChanged(object sender, EventArgs e) => UpdateLocation();
+
+        private void UpdateLocation()
+        {
+            var locationService = LocationService.Service;
+            var location = locationService.Location;
+
+            var position = new Position(location.Latitude, location.Longitude);
+            SetPinPosition(position);
+        }
+
+        private void SetPinPosition(Position position)
+        {
+            if (pin == null || pin.Position.Latitude != position.Latitude || pin.Position.Longitude != position.Longitude)
+            {
+                var radius = map.VisibleRegion?.Radius ?? DefaultRadius;
+
+                var mapSpan = MapSpan.FromCenterAndRadius(position, radius);
+                map.MoveToRegion(mapSpan);
+
+                if (pin == null)
+                {
+                    pin = new Pin() { Label = "", Position = position };
+                    map.Pins.Add(pin);
+                }
+                else
+                    pin.Position = position;
+            }
         }
 
         private void map_MapClicked(object sender, MapClickedEventArgs e)
         {
-            pin.Position = e.Position;
+            SetPinPosition(e.Position);
 
-            var location = new Location();
-            location.Latitude = e.Position.Latitude;
-            location.Longitude = e.Position.Longitude;
+            // if there's a delay timer already, remove it
+            if (delayTimer != null)
+            {
+                delayTimer.Dispose();
+                delayTimer = null;
+            }
 
-            App.SetLocation(location);
-
-            var radius = map.VisibleRegion?.Radius ?? DefaultRadius;
-            var mapSpan = MapSpan.FromCenterAndRadius(e.Position, radius);
-            map.MoveToRegion(mapSpan);
+            var location = new Location(e.Position.Latitude, e.Position.Longitude);
+            delayTimer = new Timer(DelayedSetLocation, location, TimeSpan.FromSeconds(5), TimeSpan.FromTicks(-1));
         }
 
-        private async void Button_Clicked(object sender, EventArgs e)
-        {
-            await App.ResetLocation();
-            var location = await App.GetLocation();
+        private void DelayedSetLocation(object state) => LocationService.Service.SetLocation((Location)state);
 
-            App.SetLocation(location);
-
-            var center = new Position(location.Latitude, location.Longitude);
-            var radius = map.VisibleRegion?.Radius ?? DefaultRadius;
-            var mapSpan = MapSpan.FromCenterAndRadius(center, radius);
-            map.MoveToRegion(mapSpan);
-
-            pin.Position = center;
-        }
+        private void Button_Clicked(object sender, EventArgs e) => LocationService.Service.ResetLocation();
     }
 }

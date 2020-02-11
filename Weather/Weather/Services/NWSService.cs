@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Xamarin.Essentials;
 
 namespace Weather
 {
@@ -45,26 +46,36 @@ namespace Weather
 
         static NWSService service;
         static object serviceLock = new object();
-        public static NWSService GetService()
+        public static NWSService Service
         {
-            lock(serviceLock)
-                if (service == null)
-                    service = new NWSService();
-            return service;
+            get
+            {
+                lock(serviceLock)
+                    if (service == null)
+                        service = new NWSService();
+                return service;
+            }
         }
 
         NWSService()
         {
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "Weather app");
+
+            UpdateLocation();
+            LocationService.Service.LocationChanged += NWSService_LocationChanged;
         }
 
-        public void SetLocation(double latitude, double longitude)
+        private void NWSService_LocationChanged(object sender, EventArgs e) => UpdateLocation();
+
+        private void UpdateLocation()
         {
-            if (QueryLatitude != latitude || QueryLongitude != longitude)
+            var location = LocationService.Service.Location;
+
+            if (QueryLatitude != location.Latitude || QueryLongitude != location.Longitude)
             {
-                QueryLatitude = latitude;
-                QueryLongitude = longitude;
+                QueryLatitude = location.Latitude;
+                QueryLongitude = location.Longitude;
 
                 Location = null;
                 Temperature = null;
@@ -83,6 +94,8 @@ namespace Weather
                 WordedForecast = null;
 
                 lastRefresh = DateTime.MinValue;
+
+                Refresh();
             }
         }
 

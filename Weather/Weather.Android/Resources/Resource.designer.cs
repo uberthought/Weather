@@ -4366,58 +4366,61 @@ namespace Weather.Droid
 			public const int uiScrollGestures = 2130903530;
 			
 			// aapt resource value: 0x7F0301EB
-			public const int uiTiltGestures = 2130903531;
+			public const int uiScrollGesturesDuringRotateOrZoom = 2130903531;
 			
 			// aapt resource value: 0x7F0301EC
-			public const int uiZoomControls = 2130903532;
+			public const int uiTiltGestures = 2130903532;
 			
 			// aapt resource value: 0x7F0301ED
-			public const int uiZoomGestures = 2130903533;
+			public const int uiZoomControls = 2130903533;
 			
 			// aapt resource value: 0x7F0301EE
-			public const int useCompatPadding = 2130903534;
+			public const int uiZoomGestures = 2130903534;
 			
 			// aapt resource value: 0x7F0301EF
-			public const int useViewLifecycle = 2130903535;
+			public const int useCompatPadding = 2130903535;
 			
 			// aapt resource value: 0x7F0301F0
-			public const int viewInflaterClass = 2130903536;
+			public const int useViewLifecycle = 2130903536;
 			
 			// aapt resource value: 0x7F0301F1
-			public const int voiceIcon = 2130903537;
+			public const int viewInflaterClass = 2130903537;
 			
 			// aapt resource value: 0x7F0301F2
-			public const int windowActionBar = 2130903538;
+			public const int voiceIcon = 2130903538;
 			
 			// aapt resource value: 0x7F0301F3
-			public const int windowActionBarOverlay = 2130903539;
+			public const int windowActionBar = 2130903539;
 			
 			// aapt resource value: 0x7F0301F4
-			public const int windowActionModeOverlay = 2130903540;
+			public const int windowActionBarOverlay = 2130903540;
 			
 			// aapt resource value: 0x7F0301F5
-			public const int windowFixedHeightMajor = 2130903541;
+			public const int windowActionModeOverlay = 2130903541;
 			
 			// aapt resource value: 0x7F0301F6
-			public const int windowFixedHeightMinor = 2130903542;
+			public const int windowFixedHeightMajor = 2130903542;
 			
 			// aapt resource value: 0x7F0301F7
-			public const int windowFixedWidthMajor = 2130903543;
+			public const int windowFixedHeightMinor = 2130903543;
 			
 			// aapt resource value: 0x7F0301F8
-			public const int windowFixedWidthMinor = 2130903544;
+			public const int windowFixedWidthMajor = 2130903544;
 			
 			// aapt resource value: 0x7F0301F9
-			public const int windowMinWidthMajor = 2130903545;
+			public const int windowFixedWidthMinor = 2130903545;
 			
 			// aapt resource value: 0x7F0301FA
-			public const int windowMinWidthMinor = 2130903546;
+			public const int windowMinWidthMajor = 2130903546;
 			
 			// aapt resource value: 0x7F0301FB
-			public const int windowNoTitle = 2130903547;
+			public const int windowMinWidthMinor = 2130903547;
 			
 			// aapt resource value: 0x7F0301FC
-			public const int zOrderOnTop = 2130903548;
+			public const int windowNoTitle = 2130903548;
+			
+			// aapt resource value: 0x7F0301FD
+			public const int zOrderOnTop = 2130903549;
 			
 			static Attribute()
 			{
@@ -7145,88 +7148,73 @@ namespace Weather.Droid
 			public const int common_google_play_services_install_title = 2131558448;
 			
 			// aapt resource value: 0x7F0D0031
-			public const int common_google_play_services_notification_ticker = 2131558449;
+			public const int common_google_play_services_notification_channel_name = 2131558449;
 			
 			// aapt resource value: 0x7F0D0032
-			public const int common_google_play_services_unknown_issue = 2131558450;
+			public const int common_google_play_services_notification_ticker = 2131558450;
 			
 			// aapt resource value: 0x7F0D0033
-			public const int common_google_play_services_unsupported_text = 2131558451;
+			public const int common_google_play_services_unknown_issue = 2131558451;
 			
 			// aapt resource value: 0x7F0D0034
-			public const int common_google_play_services_update_button = 2131558452;
+			public const int common_google_play_services_unsupported_text = 2131558452;
 			
 			// aapt resource value: 0x7F0D0035
-			public const int common_google_play_services_update_text = 2131558453;
+			public const int common_google_play_services_update_button = 2131558453;
 			
 			// aapt resource value: 0x7F0D0036
-			public const int common_google_play_services_update_title = 2131558454;
+			public const int common_google_play_services_update_text = 2131558454;
 			
 			// aapt resource value: 0x7F0D0037
-			public const int common_google_play_services_updating_text = 2131558455;
+			public const int common_google_play_services_update_title = 2131558455;
 			
 			// aapt resource value: 0x7F0D0038
-			public const int common_google_play_services_wear_update_text = 2131558456;
+			public const int common_google_play_services_updating_text = 2131558456;
 			
 			// aapt resource value: 0x7F0D0039
-			public const int common_open_on_phone = 2131558457;
+			public const int common_google_play_services_wear_update_text = 2131558457;
 			
 			// aapt resource value: 0x7F0D003A
-			public const int common_signin_button_text = 2131558458;
+			public const int common_open_on_phone = 2131558458;
 			
 			// aapt resource value: 0x7F0D003B
-			public const int common_signin_button_text_long = 2131558459;
+			public const int common_signin_button_text = 2131558459;
 			
 			// aapt resource value: 0x7F0D003C
-			public const int fab_transformation_scrim_behavior = 2131558460;
+			public const int common_signin_button_text_long = 2131558460;
 			
 			// aapt resource value: 0x7F0D003D
-			public const int fab_transformation_sheet_behavior = 2131558461;
+			public const int fab_transformation_scrim_behavior = 2131558461;
 			
 			// aapt resource value: 0x7F0D003E
-			public const int hide_bottom_view_on_scroll_behavior = 2131558462;
+			public const int fab_transformation_sheet_behavior = 2131558462;
 			
 			// aapt resource value: 0x7F0D003F
-			public const int mtrl_chip_close_icon_content_description = 2131558463;
+			public const int hide_bottom_view_on_scroll_behavior = 2131558463;
 			
 			// aapt resource value: 0x7F0D0040
-			public const int password_toggle_content_description = 2131558464;
+			public const int mtrl_chip_close_icon_content_description = 2131558464;
 			
 			// aapt resource value: 0x7F0D0041
-			public const int path_password_eye = 2131558465;
+			public const int password_toggle_content_description = 2131558465;
 			
 			// aapt resource value: 0x7F0D0042
-			public const int path_password_eye_mask_strike_through = 2131558466;
+			public const int path_password_eye = 2131558466;
 			
 			// aapt resource value: 0x7F0D0043
-			public const int path_password_eye_mask_visible = 2131558467;
+			public const int path_password_eye_mask_strike_through = 2131558467;
 			
 			// aapt resource value: 0x7F0D0044
-			public const int path_password_strike_through = 2131558468;
+			public const int path_password_eye_mask_visible = 2131558468;
 			
 			// aapt resource value: 0x7F0D0045
-			public const int s1 = 2131558469;
+			public const int path_password_strike_through = 2131558469;
 			
 			// aapt resource value: 0x7F0D0046
-			public const int s2 = 2131558470;
+			public const int search_menu_title = 2131558470;
 			
 			// aapt resource value: 0x7F0D0047
-			public const int s3 = 2131558471;
-			
-			// aapt resource value: 0x7F0D0048
-			public const int s4 = 2131558472;
-			
-			// aapt resource value: 0x7F0D0049
-			public const int s5 = 2131558473;
-			
-			// aapt resource value: 0x7F0D004A
-			public const int s6 = 2131558474;
-			
-			// aapt resource value: 0x7F0D004B
-			public const int search_menu_title = 2131558475;
-			
-			// aapt resource value: 0x7F0D004C
-			public const int status_bar_notification_info_overflow = 2131558476;
+			public const int status_bar_notification_info_overflow = 2131558471;
 			
 			static String()
 			{
@@ -9227,7 +9215,7 @@ namespace Weather.Droid
 			// aapt resource value: 10
 			public const int AppCompatTextView_textAllCaps = 10;
 			
-			// aapt resource value: { 0x1010057,0x10100AE,0x7F030000,0x7F030001,0x7F030002,0x7F030003,0x7F030004,0x7F030005,0x7F030006,0x7F030007,0x7F030008,0x7F030009,0x7F03000A,0x7F03000B,0x7F03000C,0x7F03000E,0x7F03000F,0x7F030010,0x7F030011,0x7F030012,0x7F030013,0x7F030014,0x7F030015,0x7F030016,0x7F030017,0x7F030018,0x7F030019,0x7F03001A,0x7F03001B,0x7F03001C,0x7F03001D,0x7F03001E,0x7F030021,0x7F030025,0x7F030026,0x7F030027,0x7F030028,0x7F03002F,0x7F030042,0x7F030050,0x7F030051,0x7F030052,0x7F030053,0x7F030054,0x7F030059,0x7F03005A,0x7F03006B,0x7F030070,0x7F030091,0x7F030092,0x7F030093,0x7F030094,0x7F030095,0x7F030096,0x7F030097,0x7F030098,0x7F030099,0x7F03009C,0x7F0300AB,0x7F0300B4,0x7F0300B5,0x7F0300B6,0x7F0300B9,0x7F0300BB,0x7F0300BE,0x7F0300BF,0x7F0300C0,0x7F0300C1,0x7F0300C2,0x7F0300F7,0x7F030105,0x7F03012C,0x7F03012D,0x7F030130,0x7F030131,0x7F030132,0x7F030133,0x7F030134,0x7F030135,0x7F030136,0x7F03014D,0x7F03014E,0x7F03014F,0x7F030155,0x7F030157,0x7F03015E,0x7F03015F,0x7F030160,0x7F030161,0x7F03016A,0x7F03016B,0x7F03016C,0x7F03016D,0x7F03017A,0x7F03017B,0x7F030191,0x7F0301B8,0x7F0301B9,0x7F0301BA,0x7F0301BB,0x7F0301BD,0x7F0301BE,0x7F0301BF,0x7F0301C0,0x7F0301C3,0x7F0301C4,0x7F0301DE,0x7F0301DF,0x7F0301E0,0x7F0301E1,0x7F0301F0,0x7F0301F2,0x7F0301F3,0x7F0301F4,0x7F0301F5,0x7F0301F6,0x7F0301F7,0x7F0301F8,0x7F0301F9,0x7F0301FA,0x7F0301FB }
+			// aapt resource value: { 0x1010057,0x10100AE,0x7F030000,0x7F030001,0x7F030002,0x7F030003,0x7F030004,0x7F030005,0x7F030006,0x7F030007,0x7F030008,0x7F030009,0x7F03000A,0x7F03000B,0x7F03000C,0x7F03000E,0x7F03000F,0x7F030010,0x7F030011,0x7F030012,0x7F030013,0x7F030014,0x7F030015,0x7F030016,0x7F030017,0x7F030018,0x7F030019,0x7F03001A,0x7F03001B,0x7F03001C,0x7F03001D,0x7F03001E,0x7F030021,0x7F030025,0x7F030026,0x7F030027,0x7F030028,0x7F03002F,0x7F030042,0x7F030050,0x7F030051,0x7F030052,0x7F030053,0x7F030054,0x7F030059,0x7F03005A,0x7F03006B,0x7F030070,0x7F030091,0x7F030092,0x7F030093,0x7F030094,0x7F030095,0x7F030096,0x7F030097,0x7F030098,0x7F030099,0x7F03009C,0x7F0300AB,0x7F0300B4,0x7F0300B5,0x7F0300B6,0x7F0300B9,0x7F0300BB,0x7F0300BE,0x7F0300BF,0x7F0300C0,0x7F0300C1,0x7F0300C2,0x7F0300F7,0x7F030105,0x7F03012C,0x7F03012D,0x7F030130,0x7F030131,0x7F030132,0x7F030133,0x7F030134,0x7F030135,0x7F030136,0x7F03014D,0x7F03014E,0x7F03014F,0x7F030155,0x7F030157,0x7F03015E,0x7F03015F,0x7F030160,0x7F030161,0x7F03016A,0x7F03016B,0x7F03016C,0x7F03016D,0x7F03017A,0x7F03017B,0x7F030191,0x7F0301B8,0x7F0301B9,0x7F0301BA,0x7F0301BB,0x7F0301BD,0x7F0301BE,0x7F0301BF,0x7F0301C0,0x7F0301C3,0x7F0301C4,0x7F0301DE,0x7F0301DF,0x7F0301E0,0x7F0301E1,0x7F0301F1,0x7F0301F3,0x7F0301F4,0x7F0301F5,0x7F0301F6,0x7F0301F7,0x7F0301F8,0x7F0301F9,0x7F0301FA,0x7F0301FB,0x7F0301FC }
 			public static int[] AppCompatTheme = new int[] {
 					16842839,
 					16842926,
@@ -9339,8 +9327,7 @@ namespace Weather.Droid
 					2130903519,
 					2130903520,
 					2130903521,
-					2130903536,
-					2130903538,
+					2130903537,
 					2130903539,
 					2130903540,
 					2130903541,
@@ -9349,7 +9336,8 @@ namespace Weather.Droid
 					2130903544,
 					2130903545,
 					2130903546,
-					2130903547};
+					2130903547,
+					2130903548};
 			
 			// aapt resource value: 2
 			public const int AppCompatTheme_actionBarDivider = 2;
@@ -10227,7 +10215,7 @@ namespace Weather.Droid
 			// aapt resource value: 7
 			public const int DrawerArrowToggle_thickness = 7;
 			
-			// aapt resource value: { 0x7F030038,0x7F030039,0x7F030041,0x7F0300C3,0x7F0300D5,0x7F0300D6,0x7F0300F1,0x7F0300F9,0x7F03013F,0x7F030159,0x7F030163,0x7F030170,0x7F0301EE }
+			// aapt resource value: { 0x7F030038,0x7F030039,0x7F030041,0x7F0300C3,0x7F0300D5,0x7F0300D6,0x7F0300F1,0x7F0300F9,0x7F03013F,0x7F030159,0x7F030163,0x7F030170,0x7F0301EF }
 			public static int[] FloatingActionButton = new int[] {
 					2130903096,
 					2130903097,
@@ -10241,7 +10229,7 @@ namespace Weather.Droid
 					2130903385,
 					2130903395,
 					2130903408,
-					2130903534};
+					2130903535};
 			
 			// aapt resource value: 0
 			public const int FloatingActionButton_backgroundTint = 0;
@@ -10531,7 +10519,7 @@ namespace Weather.Droid
 			// aapt resource value: 2
 			public const int LoadingImageView_imageAspectRatioAdjust = 2;
 			
-			// aapt resource value: { 0x7F03002C,0x7F03005D,0x7F03005E,0x7F03005F,0x7F030060,0x7F030061,0x7F030062,0x7F030063,0x7F030119,0x7F03011A,0x7F03011B,0x7F03011C,0x7F030137,0x7F03013A,0x7F0301E7,0x7F0301E8,0x7F0301E9,0x7F0301EA,0x7F0301EB,0x7F0301EC,0x7F0301ED,0x7F0301EF,0x7F0301FC }
+			// aapt resource value: { 0x7F03002C,0x7F03005D,0x7F03005E,0x7F03005F,0x7F030060,0x7F030061,0x7F030062,0x7F030063,0x7F030119,0x7F03011A,0x7F03011B,0x7F03011C,0x7F030137,0x7F03013A,0x7F0301E7,0x7F0301E8,0x7F0301E9,0x7F0301EA,0x7F0301EB,0x7F0301EC,0x7F0301ED,0x7F0301EE,0x7F0301F0,0x7F0301FD }
 			public static int[] MapAttrs = new int[] {
 					2130903084,
 					2130903133,
@@ -10554,8 +10542,9 @@ namespace Weather.Droid
 					2130903531,
 					2130903532,
 					2130903533,
-					2130903535,
-					2130903548};
+					2130903534,
+					2130903536,
+					2130903549};
 			
 			// aapt resource value: 0
 			public const int MapAttrs_ambientEnabled = 0;
@@ -10612,19 +10601,22 @@ namespace Weather.Droid
 			public const int MapAttrs_uiScrollGestures = 17;
 			
 			// aapt resource value: 18
-			public const int MapAttrs_uiTiltGestures = 18;
+			public const int MapAttrs_uiScrollGesturesDuringRotateOrZoom = 18;
 			
 			// aapt resource value: 19
-			public const int MapAttrs_uiZoomControls = 19;
+			public const int MapAttrs_uiTiltGestures = 19;
 			
 			// aapt resource value: 20
-			public const int MapAttrs_uiZoomGestures = 20;
+			public const int MapAttrs_uiZoomControls = 20;
 			
 			// aapt resource value: 21
-			public const int MapAttrs_useViewLifecycle = 21;
+			public const int MapAttrs_uiZoomGestures = 21;
 			
 			// aapt resource value: 22
-			public const int MapAttrs_zOrderOnTop = 22;
+			public const int MapAttrs_useViewLifecycle = 22;
+			
+			// aapt resource value: 23
+			public const int MapAttrs_zOrderOnTop = 23;
 			
 			// aapt resource value: { 0x10101B7,0x10101B8,0x10101B9,0x10101BA,0x7F030038,0x7F030039,0x7F0300AD,0x7F0300FA,0x7F0300FC,0x7F0300FD,0x7F0300FE,0x7F030100,0x7F030101,0x7F030163,0x7F030186,0x7F030187 }
 			public static int[] MaterialButton = new int[] {
@@ -11141,7 +11133,7 @@ namespace Weather.Droid
 			// aapt resource value: 0
 			public const int ScrollingViewBehavior_Layout_behavior_overlapTop = 0;
 			
-			// aapt resource value: { 0x10100DA,0x101011F,0x1010220,0x1010264,0x7F030084,0x7F03009D,0x7F0300B3,0x7F0300EB,0x7F030102,0x7F03011D,0x7F03015C,0x7F03015D,0x7F030168,0x7F030169,0x7F030189,0x7F03018E,0x7F0301F1 }
+			// aapt resource value: { 0x10100DA,0x101011F,0x1010220,0x1010264,0x7F030084,0x7F03009D,0x7F0300B3,0x7F0300EB,0x7F030102,0x7F03011D,0x7F03015C,0x7F03015D,0x7F030168,0x7F030169,0x7F030189,0x7F03018E,0x7F0301F2 }
 			public static int[] SearchView = new int[] {
 					16842970,
 					16843039,
@@ -11159,7 +11151,7 @@ namespace Weather.Droid
 					2130903401,
 					2130903433,
 					2130903438,
-					2130903537};
+					2130903538};
 			
 			// aapt resource value: 0
 			public const int SearchView_android_focusable = 0;

@@ -13,7 +13,7 @@ namespace Weather
         public DetailViewModel(int index)
         {
             // we will never get to this point without the service being populated, so don't bother with the callback
-            var nwsService = NWSService.GetService();
+            var nwsService = NWSService.Service;
 
             var isLow = index % 2 != 0;
             if (nwsService.ForecastLabels[0] == "Tonight")

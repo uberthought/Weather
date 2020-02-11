@@ -21,7 +21,7 @@ namespace Weather
             BindingContext = new ViewModels.ForecastViewModel();
         }
 
-        async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var collectionView = (CollectionView)sender;
             var selectedCell = e.CurrentSelection.FirstOrDefault() as ForecastCell;

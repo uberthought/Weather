@@ -11,9 +11,7 @@ namespace Weather
         public event PropertyChangedEventHandler PropertyChanged;
         public ConditionsViewModel()
         {
-            var nwsService = NWSService.GetService();
-
-            nwsService.DataUpdated += NwsService_DataUpdated;
+            NWSService.Service.DataUpdated += NwsService_DataUpdated;
         }
 
         void NwsService_DataUpdated(object sender, EventArgs e)
