@@ -11,7 +11,7 @@ namespace Weather.ViewModels
 
         public ConditionsViewModel()
         {
-            NWSServiceJSON.Service.DataUpdated += NwsService_DataUpdated;
+            NWSService.Service.DataUpdated += NwsService_DataUpdated;
         }
 
         void NwsService_DataUpdated(object sender, EventArgs e)
@@ -27,7 +27,7 @@ namespace Weather.ViewModels
             Visibility = null;
             Pressure = null;
 
-            var nwsService = NWSServiceJSON.Service;
+            var nwsService = NWSService.Service;
 
             if (nwsService.IsValid)
             {

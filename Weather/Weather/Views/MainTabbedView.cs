@@ -10,7 +10,7 @@ namespace Weather.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainTabbedView : ContentView
     {
-        private string lastButtonText;
+        private string lastLabelText;
         private readonly ContentView mainContentView;
 
         private readonly Dictionary<string, ContentView> Views = new Dictionary<string, ContentView>
@@ -23,43 +23,57 @@ namespace Weather.Views
 
         public MainTabbedView()
         {
-            // setup grid
-            var grid = new Grid
+            BindingContext = this;
+
+            var stackLayout = new StackLayout()
             {
-                ColumnSpacing = 0,
-                RowSpacing = 0,
-                RowDefinitions = new RowDefinitionCollection
-                    {
-                        new RowDefinition { Height = 60 },
-                        new RowDefinition { Height = GridLength.Auto }
-                    },
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                Padding = 0,
+                Spacing = 0
             };
 
-            // add buttons
+            // add labels
+            var labelStackLayout = new StackLayout()
+            {
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Orientation = StackOrientation.Horizontal,
+                BackgroundColor = Color.LightBlue,
+                Padding = 0,
+                Spacing = 0
+            };
+            stackLayout.Children.Add(labelStackLayout);
             for (var i = 0; i < Views.Count(); i++)
             {
-                var buttonText = Views.Keys.ElementAt(i);
-                var button = new Button
+                var text = Views.Keys.ElementAt(i);
+                var label = new Label
                 {
-                    Text = buttonText,
-                    BorderWidth = 0,
-                    Padding = 0,
+                    Text = text,
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    BackgroundColor = Color.LightBlue,
+                    FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
+                    FontAttributes = FontAttributes.Bold,
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
+                    Padding = new Thickness(0, 8)
                 };
-                button.Clicked += Button_Clicked;
-                grid.Children.Add(button, i, 0);
+                var gesture = new TapGestureRecognizer();
+                gesture.Tapped += Label_Clicked;
+                label.GestureRecognizers.Add(gesture);
+                labelStackLayout.Children.Add(label);
             }
 
             // add empty content view
-            mainContentView = new ContentView();
-            grid.Children.Add(mainContentView, 0, 4, 1, 3);
+            mainContentView = new ContentView()
+            {
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                Padding = 0,
+            };
+            stackLayout.Children.Add(mainContentView);
 
             // add first page
             mainContentView.Content = Views.Values.FirstOrDefault();
-            lastButtonText = Views.Keys.FirstOrDefault();
+            lastLabelText = Views.Keys.FirstOrDefault();
 
-            Content = new ContentView { Content = grid };
-
-            BindingContext = this;
+            Content = new ContentView { Content = stackLayout };
         }
 
         object selectedItem;
@@ -73,19 +87,19 @@ namespace Weather.Views
 
         public void ResetContentView()
         {
-            mainContentView.Content = Views[lastButtonText];
+            mainContentView.Content = Views[lastLabelText];
             if ((mainContentView?.Content as ContentView)?.Content is CollectionView collectionView && selectedItem != null)
                 collectionView.ScrollTo(selectedItem, position: ScrollToPosition.Center, animate: false);
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
+        private void Label_Clicked(object sender, EventArgs e)
         {
-            var button = (Button)sender;
+            var label = (Label)sender;
 
-            if (button.Text != lastButtonText)
+            if (label.Text != lastLabelText)
             {
-                mainContentView.Content = Views[button.Text];
-                lastButtonText = button.Text;
+                mainContentView.Content = Views[label.Text];
+                lastLabelText = label.Text;
             }
         }
 

@@ -11,7 +11,7 @@ namespace Weather.ViewModels
 
         public DetailViewModel(int index)
         {
-            var nwsService = NWSServiceJSON.Service;
+            var nwsService = NWSService.Service;
 
             var isLow = index % 2 != 0;
             if (nwsService.ForecastLabels[0] == "Tonight")

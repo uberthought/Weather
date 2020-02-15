@@ -61,7 +61,7 @@ namespace Weather
         {
             if (UseDeviceLocation)
                 LocationService.Service.ResetLocation();
-            NWSServiceJSON.Service.Refresh();
+            NWSService.Service.Refresh();
         }
 
     }

@@ -9,13 +9,13 @@
              xmlns:ads="clr-namespace:Weather.Ads"
              x:Class="Weather.Pages.MainAdMobPage">
     <ContentPage.Content>
-        <Grid>
+        <Grid Padding="0" RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <views:MainTabbedView/>
+            <views:MainTabbedView Grid.Row="0"/>
 
             <ads:AdMobView Grid.Row="1"
                            HeightRequest="50"/>

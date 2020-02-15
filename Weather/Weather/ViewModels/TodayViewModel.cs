@@ -11,7 +11,7 @@ namespace Weather.ViewModels
 
         public TodayViewModel()
         {
-            NWSServiceJSON.Service.DataUpdated += NwsService_DataUpdated;
+            NWSService.Service.DataUpdated += NwsService_DataUpdated;
         }
 
         private void NwsService_DataUpdated(object sender, EventArgs e)
@@ -33,7 +33,7 @@ namespace Weather.ViewModels
             ForecastTemperature = null;
             ForecastDetailText = null;
 
-            var nwsService = NWSServiceJSON.Service;
+            var nwsService = NWSService.Service;
 
             if (nwsService.IsValid)
             {

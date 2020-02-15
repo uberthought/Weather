@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Weather.Services
 {
-    class NWSServiceJSON
+    class NWSService
     {
         static readonly string baseAddress = "https://api.weather.gov";
         readonly HttpClient client;
@@ -43,15 +43,15 @@ namespace Weather.Services
         public List<double> ForecastTemperatures { private set; get; }
         public List<string> WordedForecast { private set; get; }
 
-        static NWSServiceJSON service;
+        static NWSService service;
         static readonly object serviceLock = new object();
-        public static NWSServiceJSON Service
+        public static NWSService Service
         {
             get
             {
                 lock (serviceLock)
                     if (service == null)
-                        service = new NWSServiceJSON();
+                        service = new NWSService();
                 return service;
             }
         }
@@ -64,7 +64,7 @@ namespace Weather.Services
         int? GridX;
         int? GridY;
 
-        NWSServiceJSON()
+        NWSService()
         {
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "Weather app");
@@ -81,6 +81,11 @@ namespace Weather.Services
             {
                 QueryLatitude = location.Latitude;
                 QueryLongitude = location.Longitude;
+
+                StationId = null;
+                GridWFO = null;
+                GridX = null;
+                GridY = null;
 
                 Location = null;
                 Temperature = null;
@@ -143,43 +148,10 @@ namespace Weather.Services
             }
         }
 
-        //async Task GetStationFromGrid()
-        //{
-        //    if (GridWFO == null || GridX == null || GridY == null)
-        //        await GetGridPoint();
-
-        //    var uri = new Uri($"{baseAddress}/gridpoints/{GridWFO}/{GridX},{GridY}/stations");
-        //    var response = await client.GetAsync(uri);
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        // extract the needed data from the json string
-        //        var content = await response.Content.ReadAsStringAsync();
-        //        var jObject = JObject.Parse(content);
-
-        //        var closestDistance = double.MaxValue;
-        //        foreach (var feature in jObject["features"])
-        //        {
-        //            var stationLatitude = (double)feature["geometry"]["coordinates"][1];
-        //            var stationLongitude = (double)feature["geometry"]["coordinates"][0];
-
-        //            var x = QueryLatitude - stationLatitude;
-        //            var y = QueryLongitude - stationLongitude;
-        //            var stationDistance = Math.Sqrt(x * x + y * y);
-        //            if (stationDistance < closestDistance)
-        //            {
-        //                closestDistance = stationDistance;
-        //                Location = (string)feature["properties"]["name"];
-        //                StationId = (string)feature["properties"]["stationIdentifier"];
-        //            }
-        //        }
-        //    }
-        //}
-
         async Task GetCurrentConditions()
         {
             if (StationId == null)
                 await GetStationFromLocation();
-            //await GetStationFromGrid();
 
             // make network request
             var uri = new Uri($"{baseAddress}/stations/{StationId}/observations/latest?require_qc=false");

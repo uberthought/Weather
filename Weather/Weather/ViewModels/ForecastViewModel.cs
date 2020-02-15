@@ -12,14 +12,14 @@ namespace Weather.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         public ForecastViewModel()
         {
-            NWSServiceJSON.Service.DataUpdated += NwsService_DataUpdated;
+            NWSService.Service.DataUpdated += NwsService_DataUpdated;
         }
 
         private void NwsService_DataUpdated(object sender, EventArgs e)
         {
             ForecastCells = new List<ForecastCell>();
 
-            var nwsService = NWSServiceJSON.Service;
+            var nwsService = NWSService.Service;
 
             if (nwsService.IsValid)
             {
