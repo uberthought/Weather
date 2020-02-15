@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Weather
+namespace Weather.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainTabbedView : ContentView
     {
         private string lastButtonText;
-        private ContentView mainContentView;
+        private readonly ContentView mainContentView;
 
-        private Dictionary<string, ContentView> Views = new Dictionary<string, ContentView>
+        private readonly Dictionary<string, ContentView> Views = new Dictionary<string, ContentView>
         {
             { "Today", new TodayView() },
             { "Conditions", new ConditionsView() },
@@ -64,14 +62,20 @@ namespace Weather
             BindingContext = this;
         }
 
+        object selectedItem;
+
         public void SetContentView(ContentView contentView)
         {
+            if ((mainContentView?.Content as ContentView)?.Content is CollectionView collectionView)
+                selectedItem = collectionView.SelectedItem;
             mainContentView.Content = contentView;
         }
 
         public void ResetContentView()
         {
             mainContentView.Content = Views[lastButtonText];
+            if ((mainContentView?.Content as ContentView)?.Content is CollectionView collectionView && selectedItem != null)
+                collectionView.ScrollTo(selectedItem, position: ScrollToPosition.Center, animate: false);
         }
 
         private void Button_Clicked(object sender, EventArgs e)

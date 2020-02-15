@@ -4,9 +4,10 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             xmlns:pages="clr-namespace:Weather"
-             xmlns:local="clr-namespace:Weather"
-             x:Class="Weather.MainAdMobPage">
+             xmlns:views="clr-namespace:Weather.Views"
+             xmlns:local="clr-namespace:Weather.Pages"
+             xmlns:ads="clr-namespace:Weather.Ads"
+             x:Class="Weather.Pages.MainAdMobPage">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -14,10 +15,10 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <pages:MainTabbedView/>
+            <views:MainTabbedView/>
 
-            <local:AdMobView Grid.Row="1"
-                             HeightRequest="50"/>
+            <ads:AdMobView Grid.Row="1"
+                           HeightRequest="50"/>
         </Grid>
 
     </ContentPage.Content>

@@ -5,7 +5,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:Weather"
-             x:Class="Weather.ForecastView">
+             xmlns:viewmodel="clr-namespace:Weather.ViewModels"
+             x:Class="Weather.Views.ForecastView">
+
+    <ContentView.BindingContext>
+        <viewmodel:ForecastViewModel />
+    </ContentView.BindingContext>
 
     <CollectionView ItemsLayout="VerticalList"
                                 ItemsSource="{Binding ForecastCells}"

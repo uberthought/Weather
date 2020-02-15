@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using Weather;
 using Weather.Droid;
 using System.ComponentModel;
+using Weather.Ads;
 
 [assembly: ExportRenderer(typeof(AdMobView), typeof(AdMobViewRenderer))]
 namespace Weather.Droid

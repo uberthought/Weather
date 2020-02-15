@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using Weather.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Xamarin.Forms.Xaml;
 
-namespace Weather
+namespace Weather.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MapView : ContentView
     {
         Pin pin;
-        static Distance DefaultRadius = Distance.FromMiles(10);
+        static readonly Distance DefaultRadius = Distance.FromMiles(10);
         Timer delayTimer;
 
         public MapView()
@@ -34,8 +31,7 @@ namespace Weather
 
         private void UpdateLocation()
         {
-            var locationService = LocationService.Service;
-            var location = locationService.Location;
+            var location = LocationService.Service.Location;
 
             var position = new Position(location.Latitude, location.Longitude);
             SetPinPosition(position);
@@ -60,7 +56,7 @@ namespace Weather
             }
         }
 
-        private void map_MapClicked(object sender, MapClickedEventArgs e)
+        private void Map_MapClicked(object sender, MapClickedEventArgs e)
         {
             SetPinPosition(e.Position);
 

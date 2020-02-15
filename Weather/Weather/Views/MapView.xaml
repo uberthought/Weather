@@ -4,18 +4,13 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             xmlns:local="clr-namespace:Weather"
-             x:Class="Weather.MapView"
+             x:Class="Weather.Views.MapView"
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps">
-
-    <ContentView.BindingContext>
-        <local:MapViewModel/>
-    </ContentView.BindingContext>
 
     <ContentView.Content>
         <StackLayout>
             <maps:Map x:Name="map"
-                      MapClicked="map_MapClicked"/>
+                      MapClicked="Map_MapClicked"/>
             <Button x:Name="LocationButton"
                     Text="Use Device Location"
                     Clicked="Button_Clicked"/>

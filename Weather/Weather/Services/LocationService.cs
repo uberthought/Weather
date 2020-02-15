@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace Weather
+namespace Weather.Services
 {
     class LocationService
     {
@@ -16,11 +13,11 @@ namespace Weather
         public bool LocationAuthorized => !LocationNotAuthorized;
 
 
-        static Location DefaultLocation = new Location(38.4815847, -100.568576);
+        static readonly Location DefaultLocation = new Location(38.4815847, -100.568576);
         bool LocationNotAuthorized;
 
         static LocationService service;
-        static object serviceLock = new object();
+        static readonly object serviceLock = new object();
         public static LocationService Service
         {
             get

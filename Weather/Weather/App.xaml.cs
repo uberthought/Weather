@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
+using Weather.Pages;
+using Weather.Services;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Weather
 {
     public partial class App : Application
     {
-        Timer refreshTimer;
         public bool UseDeviceLocation { private set; get; } = true;
+
+        Timer refreshTimer;
 
         public App()
         {
@@ -62,7 +61,7 @@ namespace Weather
         {
             if (UseDeviceLocation)
                 LocationService.Service.ResetLocation();
-            NWSService.Service.Refresh();
+            NWSServiceJSON.Service.Refresh();
         }
 
     }

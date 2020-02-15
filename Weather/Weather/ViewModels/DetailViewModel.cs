@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
+using Weather.Services;
 using Xamarin.Forms;
 
-namespace Weather
+namespace Weather.ViewModels
 {
     class DetailViewModel : INotifyPropertyChanged
     {
@@ -12,20 +11,18 @@ namespace Weather
 
         public DetailViewModel(int index)
         {
-            // we will never get to this point without the service being populated, so don't bother with the callback
-            var nwsService = NWSService.Service;
+            var nwsService = NWSServiceJSON.Service;
 
             var isLow = index % 2 != 0;
             if (nwsService.ForecastLabels[0] == "Tonight")
                 isLow = !isLow;
-            var temperature = isLow ? nwsService.ForecastLows[(int)(index / 2)] : nwsService.ForecastHighs[(int)(index / 2)];
 
             Label = nwsService.ForecastLabels[index];
             Icon = ImageSource.FromUri(new Uri(nwsService.ForecastIcons[index]));
             Description = nwsService.ForecastDescriptions[index];
             TemperatureLabel = isLow ? "Low:" : "Hi:";
             TemperatureColor = isLow ? Color.Blue : Color.Red;
-            Temperature = $"{temperature:0}℉";
+            Temperature = $"{nwsService.ForecastTemperatures[index]:F0}℉";
             DetailText = nwsService.WordedForecast[index];
             BackgroundColor = isLow ? Color.DarkGray : Color.LightBlue;
 

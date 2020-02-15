@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-
+using Weather.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Weather
+namespace Weather.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ForecastView : ContentView
@@ -18,15 +15,14 @@ namespace Weather
         {
             InitializeComponent();
 
-            BindingContext = new ViewModels.ForecastViewModel();
+            BindingContext = new ForecastViewModel();
         }
 
         void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var collectionView = (CollectionView)sender;
-            var selectedCell = e.CurrentSelection.FirstOrDefault() as ForecastCell;
 
-            if (selectedCell == null)
+            if (!(e.CurrentSelection.FirstOrDefault() is ForecastCell selectedCell))
                 return;
 
             var mainTabbedView = MainTabbedView.FindMainTabbedView(Parent);

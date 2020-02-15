@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
-namespace Weather
+namespace Weather.ViewModels
 {
     public class ForecastCell
     {

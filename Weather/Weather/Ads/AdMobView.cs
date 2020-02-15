@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 
-namespace Weather
+namespace Weather.Ads
 {
 	public class AdMobView : View
 	{

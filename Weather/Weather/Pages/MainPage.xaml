@@ -4,10 +4,10 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             xmlns:pages="clr-namespace:Weather"
+             xmlns:views="clr-namespace:Weather.Views"
              xmlns:local="clr-namespace:Weather"
-             x:Class="Weather.MainPage">
+             x:Class="Weather.Pages.MainPage">
     <ContentPage.Content>
-        <pages:MainTabbedView/>
+        <views:MainTabbedView/>
     </ContentPage.Content>
 </ContentPage>
