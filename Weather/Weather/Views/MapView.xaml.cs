@@ -13,7 +13,6 @@ namespace Weather.Views
     {
         Pin pin;
         static readonly Distance DefaultRadius = Distance.FromMiles(10);
-        Timer delayTimer;
 
         public MapView()
         {
@@ -60,33 +59,27 @@ namespace Weather.Views
         {
             SetPinPosition(e.Position);
 
-            // if there's a delay timer already, remove it
-            if (delayTimer != null)
-            {
-                delayTimer.Dispose();
-                delayTimer = null;
-            }
-
-            // wait a bit, then set the app location
-            var location = new Location(e.Position.Latitude, e.Position.Longitude);
-            delayTimer = new Timer(DelayedSetLocation, location, TimeSpan.FromSeconds(5), TimeSpan.FromTicks(-1));
-        }
-
-        private void DelayedSetLocation(object state)
-        {
-            // set the new location
-            LocationService.Service.SetLocation((Location)state);
-         
             // disable UseDeviceLocation
             ((App)Application.Current).SetUseDeviceLocation(false);
         }
 
-            private void Button_Clicked(object sender, EventArgs e)
+        private void Button_Clicked(object sender, EventArgs e)
         {
             // enable UseDeviceLocation
             ((App)Application.Current).SetUseDeviceLocation(true);
 
             LocationService.Service.ResetLocation();
+        }
+
+        protected override void OnParentSet()
+        {
+            base.OnParentSet();
+
+            if (Parent == null && pin != null)
+            {
+                var location = new Location(pin.Position.Latitude, pin.Position.Longitude);
+                LocationService.Service.SetLocation(location);
+            }
         }
     }
 }

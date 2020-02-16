@@ -26,6 +26,8 @@ namespace Weather.ViewModels
             Gust = null;
             Visibility = null;
             Pressure = null;
+            WindChill = null;
+            HeatIndex = null;
 
             var nwsService = NWSService.Service;
 
@@ -49,7 +51,6 @@ namespace Weather.ViewModels
                 else if (nwsService.WindDirection > 292.5 && nwsService.WindDirection <= 337.5)
                     windDirection = "NW";
 
-
                 // update current condition
                 Location = nwsService.Location;
                 TextDescription = nwsService.TextDescription;
@@ -59,9 +60,21 @@ namespace Weather.ViewModels
                 Wind = $"Wind {windDirection} {nwsService.WindSpeed:F1} MPH";
                 if (!string.IsNullOrEmpty(nwsService.ConditionIconUrl))
                     ConditionsIcon = ImageSource.FromUri(new Uri(nwsService.ConditionIconUrl));
+
+                ShowGust = nwsService.WindGust.HasValue;
                 Gust = $"Gust {nwsService.WindGust:F1} MPH";
+        
+                ShowVisibility = nwsService.Visibility.HasValue;
                 Visibility = $"Visibility {nwsService.Visibility:F1} Miles";
+
+                ShowPressure = nwsService.Pressure.HasValue;
                 Pressure = $"Pressure {nwsService.Pressure:F2} HG";
+
+                ShowWindChill = nwsService.WindChill.HasValue;
+                WindChill = $"Wind Chill {nwsService.WindChill:F0}℉";
+
+                ShowHeatIndex = nwsService.HeatIndex.HasValue;
+                HeatIndex = $"Heat Index {nwsService.HeatIndex:F0}℉";
             }
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Location)));
@@ -71,9 +84,21 @@ namespace Weather.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RelativeHumidity)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Wind)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConditionsIcon)));
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowGust)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Gust)));
+            
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowVisibility)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Visibility)));
+            
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowPressure)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Pressure)));
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowWindChill)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WindChill)));
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowHeatIndex)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HeatIndex)));
         }
 
         public string Location { private set; get; }
@@ -84,8 +109,19 @@ namespace Weather.ViewModels
         public string Wind { private set; get; }
         public string DewPoint { private set; get; }
         public string RelativeHumidity { private set; get; }
+        public bool ShowGust { private set; get; }
         public string Gust { private set; get; }
+        
+        public bool ShowVisibility { private set; get; }
         public string Visibility { private set; get; }
+
+        public bool ShowPressure { private set; get; }
         public string Pressure { private set; get; }
+
+        public bool ShowWindChill { private set; get; }
+        public string WindChill { private set; get; }
+
+        public bool ShowHeatIndex { private set; get; }
+        public string HeatIndex { private set; get; }
     }
 }

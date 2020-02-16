@@ -25,6 +25,8 @@ namespace Weather.Services
 
         // current conditions
         public double? Temperature { private set; get; }
+        public double? WindChill { private set; get; }
+        public double? HeatIndex { private set; get; }
         public DateTime? Timestamp { private set; get; }
         public string TextDescription { private set; get; }
         public double? WindDirection { private set; get; }
@@ -89,6 +91,8 @@ namespace Weather.Services
 
                 Location = null;
                 Temperature = null;
+                WindChill = null;
+                HeatIndex = null;
                 Timestamp = null;
                 TextDescription = null;
                 WindDirection = null;
@@ -170,22 +174,22 @@ namespace Weather.Services
                 double.TryParse((string)jObject["properties"]["temperature"]["value"], out double temperature);
                 double.TryParse((string)jObject["properties"]["windDirection"]["value"], out double windDirection);
                 double.TryParse((string)jObject["properties"]["windSpeed"]["value"], out double windSpeed);
-                double.TryParse((string)jObject["properties"]["windGust"]["value"], out double windGust);
-                double.TryParse((string)jObject["properties"]["barometricPressure"]["value"], out double barometricPressure);
-                double.TryParse((string)jObject["properties"]["visibility"]["value"], out double visibility);
-                //double.TryParse((string)jObject["properties"]["windChill"]["value"], out double windChill);
-                //double.TryParse((string)jObject["properties"]["heatIndex"]["value"], out double heatIndex);
+                if (double.TryParse((string)jObject["properties"]["windGust"]["value"], out double windGust))
+                    WindGust = MetersPerSecondToMPH(windGust);
+                if (double.TryParse((string)jObject["properties"]["barometricPressure"]["value"], out double barometricPressure))
+                    Pressure = PaToHG(barometricPressure);
+                if (double.TryParse((string)jObject["properties"]["visibility"]["value"], out double visibility))
+                    Visibility = MToMiles(visibility);
+                if (double.TryParse((string)jObject["properties"]["windChill"]["value"], out double windChill))
+                    WindChill = CToF(windChill);
+                if (double.TryParse((string)jObject["properties"]["heatIndex"]["value"], out double heatIndex))
+                    HeatIndex = CToF(heatIndex);
 
                 DewPoint = CToF(dewpoint);
                 RelativeHumidity = relativeHumidity;
                 Temperature = CToF(temperature);
                 WindDirection = windDirection;
                 WindSpeed = MetersPerSecondToMPH(windSpeed);
-                WindGust = MetersPerSecondToMPH(windGust);
-                Pressure = PaToHG(barometricPressure);
-                Visibility = MToMiles(visibility);
-                //WindChill = CToF(windChill);
-                //HeatIndex = CToF(heatIndex);
 
                 TextDescription = (string)jObject["properties"]["textDescription"];
                 ConditionIconUrl = (string)jObject["properties"]["icon"];
@@ -225,17 +229,6 @@ namespace Weather.Services
                 // extract the needed data from the json string
                 var content = await response.Content.ReadAsStringAsync();
                 var jObject = JObject.Parse(content);
-
-                /*
-                 name
-                 isDaytime
-                 temperature
-                 windSpeed
-                 windDirection
-                 icon
-                 shortForecast
-                 detailedForecast
-                */
 
                 ForecastLabels = new List<string>();
                 ForecastIcons = new List<string>();

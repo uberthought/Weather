@@ -27,12 +27,21 @@
                        FontSize="Large"
                        FontAttributes="Bold"
                        HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding WindChill}"
+                       FontSize="Medium"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ShowWindChill}" />
+                <Label Text="{Binding HeatIndex}"
+                       FontSize="Medium"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ShowHeatIndex}" />
                 <Label Text="{Binding Wind}"
                        FontSize="Medium"
                        HorizontalTextAlignment="Center"/>
                 <Label Text="{Binding Gust}"
                        FontSize="Medium"
-                       HorizontalTextAlignment="Center"/>
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ShowGust}"/>
                 <Label Text="{Binding DewPoint}"
                        FontSize="Medium"
                        HorizontalTextAlignment="Center"/>
@@ -41,10 +50,12 @@
                        HorizontalTextAlignment="Center"/>
                 <Label Text="{Binding Visibility}"
                        FontSize="Medium"
-                       HorizontalTextAlignment="Center"/>
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ShowVisibility}"/>
                 <Label Text="{Binding Pressure}"
                        FontSize="Medium"
-                       HorizontalTextAlignment="Center"/>
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ShowPressure}" />
             </StackLayout>
         </ScrollView>
     </ContentView.Content>
