@@ -44,6 +44,8 @@ namespace Weather.Services
         public List<string> ForecastDescriptions { private set; get; }
         public List<double> ForecastTemperatures { private set; get; }
         public List<string> WordedForecast { private set; get; }
+        public List<string> ForecastWindSpeed { private set; get; }
+        public List<string> ForecastWindDirection { private set; get; }
 
         static NWSService service;
         static readonly object serviceLock = new object();
@@ -105,6 +107,8 @@ namespace Weather.Services
                 ForecastDescriptions = null;
                 ForecastTemperatures = null;
                 WordedForecast = null;
+                ForecastWindSpeed = null;
+                ForecastWindDirection = null;
 
                 lastRefresh = DateTime.MinValue;
 
@@ -235,6 +239,8 @@ namespace Weather.Services
                 ForecastDescriptions = new List<string>();
                 ForecastTemperatures = new List<double>();
                 WordedForecast = new List<string>();
+                ForecastWindSpeed = new List<string>();
+                ForecastWindDirection = new List<string>();
 
                 var periods = (JArray)jObject["properties"]["periods"];
 
@@ -246,6 +252,8 @@ namespace Weather.Services
                     WordedForecast.Add((string)period["detailedForecast"]);
                     double.TryParse((string)period["temperature"], out double temperature);
                     ForecastTemperatures.Add(temperature);
+                    ForecastWindSpeed.Add((string)period["windSpeed"]);
+                    ForecastWindDirection.Add((string)period["windDirection"]);
                 }
             }
         }

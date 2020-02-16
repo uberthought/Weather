@@ -31,7 +31,8 @@
                                 <Label Text="{Binding TemperatureLabel}" FontSize="Medium" HorizontalTextAlignment="End" />
                                 <Label Text="{Binding Temperature}" TextColor="{Binding TemperatureColor}" FontSize="Medium" HorizontalTextAlignment="Start"/>
                             </StackLayout>
-                            <Label Text="{Binding Description}" HorizontalTextAlignment="Center" FontSize="Medium"/>
+                            <Label Text="{Binding Wind}" HorizontalOptions="Center"/>
+                            <Label Text="{Binding Description}" HorizontalTextAlignment="Center"/>
                         </StackLayout>
                         <StackLayout Grid.Column="1">
                             <Image Source="{Binding Icon}" HeightRequest="100" WidthRequest="100" HorizontalOptions="CenterAndExpand" />

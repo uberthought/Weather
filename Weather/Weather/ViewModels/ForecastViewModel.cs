@@ -39,7 +39,8 @@ namespace Weather.ViewModels
                         TemperatureLabel = isLow ? "Low:" : "Hi:",
                         Temperature = $"{nwsService.ForecastTemperatures[i]:F0}℉",
                         TemperatureColor = isLow ? Color.Blue : Color.Red,
-                        BackgroundColor = isLow ? Color.DarkGray : Color.LightBlue
+                        BackgroundColor = isLow ? Color.DarkGray : Color.LightBlue,
+                        Wind = $"Wind {nwsService.ForecastWindDirection[i]} {nwsService.ForecastWindSpeed[i]}"
                     });
                 }
             }

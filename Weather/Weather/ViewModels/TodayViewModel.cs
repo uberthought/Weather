@@ -19,6 +19,8 @@ namespace Weather.ViewModels
             Location = "Forecast Unavailable";
             Updated = null;
             Temperature = null;
+            WindChill = null;
+            HeatIndex = null;
             DewPoint = null;
             TextDescription = null;
             RelativeHumidity = null;
@@ -66,6 +68,12 @@ namespace Weather.ViewModels
                 if (!string.IsNullOrEmpty(nwsService.ConditionIconUrl))
                     ConditionsIcon = ImageSource.FromUri(new Uri(nwsService.ConditionIconUrl));
 
+                ShowWindChill = nwsService.WindChill.HasValue;
+                WindChill = $"Wind Chill {nwsService.WindChill:F0}℉";
+
+                ShowHeatIndex = nwsService.HeatIndex.HasValue;
+                HeatIndex = $"Heat Index {nwsService.HeatIndex:F0}℉";
+
                 // update forecast
                 var isLow = nwsService.ForecastLabels[0] == "Tonight";
                 ForecastLabel = nwsService.ForecastLabels[0];
@@ -86,6 +94,10 @@ namespace Weather.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RelativeHumidity)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Wind)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConditionsIcon)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowWindChill)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WindChill)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowHeatIndex)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HeatIndex)));
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastLabel)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ForecastIcon)));
@@ -107,6 +119,12 @@ namespace Weather.ViewModels
         public string RelativeHumidity { private set; get; }
         public string Wind { private set; get; }
         public ImageSource ConditionsIcon { private set; get; }
+
+        public bool ShowWindChill { private set; get; }
+        public string WindChill { private set; get; }
+
+        public bool ShowHeatIndex { private set; get; }
+        public string HeatIndex { private set; get; }
 
         // forecast
         public string ForecastLabel { private set; get; }

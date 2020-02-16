@@ -25,6 +25,7 @@ namespace Weather.ViewModels
             Temperature = $"{nwsService.ForecastTemperatures[index]:F0}℉";
             DetailText = nwsService.WordedForecast[index];
             BackgroundColor = isLow ? Color.DarkGray : Color.LightBlue;
+            Wind = $"Wind {nwsService.ForecastWindDirection[index]} {nwsService.ForecastWindSpeed[index]}";
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Label)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Icon)));
@@ -34,6 +35,7 @@ namespace Weather.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temperature)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DetailText)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BackgroundColor)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Wind)));
         }
 
         public string Label { private set; get; }
@@ -44,5 +46,6 @@ namespace Weather.ViewModels
         public string Temperature { private set; get; }
         public string DetailText { private set; get; }
         public Color BackgroundColor { private set; get; }
+        public string Wind { private set; get; }
     }
 }

@@ -12,5 +12,6 @@ namespace Weather.ViewModels
         public string Temperature { get; set; }
         public Color TemperatureColor { get; set; }
         public Color BackgroundColor { get; set; }
+        public string Wind { get; set; }
     }
 }

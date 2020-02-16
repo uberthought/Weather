@@ -36,6 +36,12 @@
                         <Label Text="{Binding Temperature}"
                                 FontSize="Medium"
                                 FontAttributes="Bold" />
+                        <Label Text="{Binding WindChill}"
+                                FontSize="Medium"
+                               IsVisible="{Binding ShowWindChill}"/>
+                        <Label Text="{Binding HeatIndex}"
+                                FontSize="Medium"
+                               IsVisible="{Binding ShowHeatIndex}"/>
                         <Label Text="{Binding Wind}"
                                 FontSize="Medium" />
                         <Label Text="{Binding DewPoint}"

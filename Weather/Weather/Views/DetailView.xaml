@@ -29,6 +29,10 @@
                     HorizontalTextAlignment="Start"
                     FontSize="Large"/>
             </StackLayout>
+            <Label Text="{Binding Wind}"
+                HorizontalOptions="Center"
+                FontSize="Large"
+                HorizontalTextAlignment="Center"/>
             <Label Text="{Binding DetailText}"
                 HorizontalOptions="Center"
                 FontSize="Large"
