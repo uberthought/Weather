@@ -109,18 +109,14 @@ class ConditionsFragment: Fragment() {
                 val activity = this@ConditionsFragment.activity
                 activity ?: return
 
-                var parentView = this@ConditionsFragment.view
-                while(parentView != null && parentView.tag != "PortraitConditionsFragment")
-                    parentView = parentView.parent as? View
-
+                val parentTag = (this@ConditionsFragment.view?.parent as View?)?.tag
                 val landscapeFragment = parentFragmentManager.findFragmentByTag("LandscapeDetailedConditionsFragment")
-                val portraitFragment = parentFragmentManager.findFragmentByTag("PortraitDetailedConditionsFragment")
 
-                val fragment = if (parentView == null) landscapeFragment
-                    else portraitFragment ?: DetailedConditionsFragment().let {
+                val fragment = if (parentTag == "LandscapeConditionsFragment") landscapeFragment
+                    else DetailedConditionsFragment().let {
                         val manager = parentFragmentManager
                         val transaction = manager.beginTransaction()
-                        transaction.add(R.id.portraitForecastFragment, it, "PortraitDetailedConditionsFragment")
+                        transaction.add(this@ConditionsFragment.id, it, "PortraitDetailedConditionsFragment")
                         transaction.commit()
                         manager.executePendingTransactions()
                         it

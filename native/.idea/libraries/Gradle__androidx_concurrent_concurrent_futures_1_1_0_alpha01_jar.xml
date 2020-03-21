@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.concurrent:concurrent-futures:1.1.0-alpha01@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.concurrent/concurrent-futures/1.1.0-alpha01/343e4dfcbd58ce367d0bbe36bcc04e5fd2cce153/concurrent-futures-1.1.0-alpha01.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.concurrent/concurrent-futures/1.1.0-alpha01/a27842adf6c42f3d80893bd46e1de4ac024218e7/concurrent-futures-1.1.0-alpha01-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -14,7 +14,7 @@ class LogService {
         }
     }
 
-    var bundle = Bundle()
+    private var bundle = Bundle()
 
     fun addMessage(message:String) {
         val logTag = Thread.currentThread().stackTrace[3].fileName.split('.')[0]

@@ -13,7 +13,7 @@ import com.companyname.weather.viewModels.LocationViewModel
 
 class ForecastFragment: Fragment() {
 
-    lateinit var locationViewModel: LocationViewModel
+    private lateinit var locationViewModel: LocationViewModel
     lateinit var conditionsViewModel: ConditionsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

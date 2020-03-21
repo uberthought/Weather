@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.companyname.weather.viewModels.ConditionsViewModel
@@ -15,6 +16,8 @@ import com.companyname.weather.viewModels.DetailedConditionsViewModel
 import com.companyname.weather.R
 import com.companyname.weather.services.FileCachingService
 import com.companyname.weather.databinding.DetailedConditionsFragmentBinding
+import kotlinx.android.synthetic.main.detailed_conditions_fragment.*
+import kotlinx.android.synthetic.main.detailed_conditions_fragment.view.*
 
 class DetailedConditionsFragment : Fragment() {
     private lateinit var viewModel: DetailedConditionsViewModel
@@ -54,23 +57,10 @@ class DetailedConditionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val constraintLayout = view.parent as? ConstraintLayout
-        constraintLayout?.let {
-            ConstraintSet().apply {
-                clone(it)
-                if (tag == "PortraitDetailedConditionsFragment") {
-                    connect(R.id.conditionsCard, ConstraintLayout.LayoutParams.START, R.id.startGuideline, ConstraintLayout.LayoutParams.END)
-                    connect(R.id.conditionsCard, ConstraintLayout.LayoutParams.END, R.id.endGuideline, ConstraintLayout.LayoutParams.START)
-                    constrainWidth(R.id.conditionsCard,  ConstraintSet.MATCH_CONSTRAINT)
-                }
-                else {
-                    connect(R.id.conditionsCard, ConstraintLayout.LayoutParams.START, ConstraintLayout.LayoutParams.PARENT_ID, ConstraintLayout.LayoutParams.START)
-                    connect(R.id.conditionsCard, ConstraintLayout.LayoutParams.END, ConstraintLayout.LayoutParams.PARENT_ID, ConstraintLayout.LayoutParams.END)
-                }
-                connect(R.id.conditionsCard, ConstraintLayout.LayoutParams.TOP, ConstraintLayout.LayoutParams.PARENT_ID, ConstraintLayout.LayoutParams.TOP)
-                connect(R.id.conditionsCard, ConstraintLayout.LayoutParams.BOTTOM, ConstraintLayout.LayoutParams.PARENT_ID, ConstraintLayout.LayoutParams.BOTTOM)
-                applyTo(it)
-            }
+        val containerTag = (view.parent as? FragmentContainerView)?.tag
+        if (containerTag == "LandscapeDetailedConditionsFragment") {
+            conditionsCard.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            conditionsCard.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         }
     }
 

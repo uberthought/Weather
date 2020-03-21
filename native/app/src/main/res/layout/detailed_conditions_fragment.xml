@@ -10,6 +10,27 @@
         <variable name="viewModel" type="com.companyname.weather.viewModels.DetailedConditionsViewModel"/>
     </data>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="@{fragment::onClick}"
+        >
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/startGuideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.2"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/endGuideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.8"
+            />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/conditionsCard"
             style="@style/Widget.MaterialComponents.CardView"
@@ -17,8 +38,12 @@
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:strokeColor="@color/primaryDarkColor"
             app:cardBackgroundColor="@{context.getColor(viewModel.details.backgroundColor)}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/startGuideline"
+            app:layout_constraintEnd_toEndOf="@id/endGuideline"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -232,5 +257,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
