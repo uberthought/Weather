@@ -8,7 +8,7 @@ import com.companyname.weather.services.NWSService
 class ForecastViewModel : ViewModel() {
     val forecasts: MutableLiveData<List<DetailedConditionsViewModel.Details>> = MutableLiveData()
 
-    init { NWSService.instance.forecasts.observeForever { forecasts -> onForecastsChanged(forecasts) } }
+    init { NWSService.forecasts.observeForever { forecasts -> onForecastsChanged(forecasts) } }
 
     private fun onForecastsChanged(forecasts: List<NWSService.Forecast>) {
         this.forecasts.postValue(forecasts.map {

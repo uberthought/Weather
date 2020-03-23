@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <SwitchPreferenceCompat
+        app:key="use_device"
+        app:title="Use device location"
+        android:summary="Follow the device location"
+        />
+
+    <EditTextPreference
+        app:key="device_location"
+        app:title="Enter location"
+        app:summary="Enter the location for the forecast"
+        />
+
+    <Preference
+        app:key="feedback"
+        app:title="Send feedback"
+        app:summary="Report technical issues or suggest new features"
+        />
+
+</PreferenceScreen>

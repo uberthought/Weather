@@ -97,8 +97,8 @@ class ConditionsFragment: Fragment() {
                 binding.viewHolder = this
 
                 val iconUrl = details.icon?.replace("medium", resources.getString(R.string.smallIconSize))
-                iconUrl?.let {
-                    FileCachingService.instance.getCachedFile(it, context).observe(viewLifecycleOwner, Observer { path ->
+                if (iconUrl != null && context != null) {
+                    FileCachingService().getCachedFile(iconUrl, context!!).observe(viewLifecycleOwner, Observer { path ->
                         val bitmap = BitmapFactory.decodeFile(path)
                         binding.icon.setImageBitmap(bitmap)
                     })

@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.companyname.weather.databinding.ForecastFragmentBinding
 import com.companyname.weather.viewModels.ConditionsViewModel
 import com.companyname.weather.viewModels.LocationViewModel
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 class ForecastFragment: Fragment() {
 
@@ -22,12 +24,14 @@ class ForecastFragment: Fragment() {
 
         val binding = ForecastFragmentBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
-        binding.locationViewModel = locationViewModel
         binding.conditionsViewModel = conditionsViewModel
         locationViewModel.location.observe(viewLifecycleOwner, androidx.lifecycle.Observer {location ->
             (activity as AppCompatActivity).supportActionBar?.title = location
         })
-        conditionsViewModel.details.observe(viewLifecycleOwner, androidx.lifecycle.Observer { binding.timestamp.invalidate() })
+        conditionsViewModel.timestamp.observe(viewLifecycleOwner, androidx.lifecycle.Observer { timestamp ->
+            (activity as AppCompatActivity).nav_view.textView?.text = timestamp
+            binding.timestamp.invalidate()
+        })
 
         return binding.root
     }

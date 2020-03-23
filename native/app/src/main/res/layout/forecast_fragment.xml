@@ -9,7 +9,6 @@
     <data>
         <import type="android.view.View"/>
         <import type="android.text.TextUtils"/>
-        <variable name="locationViewModel" type="com.companyname.weather.viewModels.LocationViewModel"/>
         <variable name="conditionsViewModel" type="com.companyname.weather.viewModels.ConditionsViewModel"/>
     </data>
 

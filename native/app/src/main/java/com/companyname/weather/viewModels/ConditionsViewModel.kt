@@ -9,7 +9,7 @@ class ConditionsViewModel : ViewModel() {
     val timestamp: MutableLiveData<String> = MutableLiveData()
     val details: MutableLiveData<DetailedConditionsViewModel.Details> = MutableLiveData()
 
-    init { NWSService.instance.conditions.observeForever { conditions -> onConditionsChanged(conditions) } }
+    init { NWSService.conditions.observeForever { conditions -> onConditionsChanged(conditions) } }
 
     private fun onConditionsChanged(conditions: NWSService.Conditions) {
         this.details.postValue(

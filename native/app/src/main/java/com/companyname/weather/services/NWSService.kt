@@ -1,6 +1,7 @@
 package com.companyname.weather.services
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import com.companyname.weather.services.nws.NWSGridPointsForecast
@@ -17,20 +18,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class NWSService {
+
     companion object {
-        val instance = NWSService()
+        var location: MutableLiveData<String> = MutableLiveData()
+        var conditions: MutableLiveData<Conditions> = MutableLiveData()
+        var forecasts: MutableLiveData<List<Forecast>> = MutableLiveData()
 
-        val mutex = Mutex()
-        const val refreshInterval:Long = 15
-        var timestamp: Long = 0
+        private var timestamp: Long = 0
+        private val mutex = Mutex()
+        private val observers: Observers = Observers()
+
+        private var lastLocation:Location? = null
     }
-
-    private var stationId: String? = null
-    private var gridX: Int? = null
-    private var gridY: Int? = null
-    private var gridWFO: String? = null
-    private var lastLocation:Location? = null
-    private var baseURL = "https://api.weather.gov"
 
     data class Conditions (
         val dewPoint: Double? = null,
@@ -60,45 +59,41 @@ class NWSService {
         val isDaytime: Boolean = false
     )
 
-    var location: MutableLiveData<String> = MutableLiveData()
-    var conditions: MutableLiveData<Conditions> = MutableLiveData()
-    var forecasts: MutableLiveData<List<Forecast>> = MutableLiveData()
+    private class Observers {
+        init {
+            LocationService.lastLocation.observeForever { NWSService().setLocation(it) }
+            RefreshService.refresh.observeForever { GlobalScope.launch { NWSService().refresh() } }
+        }
+    }
 
-    fun setLocation(location: Location) {
-        val logService = LogService()
+    private val refreshInterval:Long = 15
 
-        logService.addMessage("got update from location service")
+    private var stationId: String? = null
+    private var gridX: Int? = null
+    private var gridY: Int? = null
+    private var gridWFO: String? = null
+    private var baseURL = "https://api.weather.gov"
+
+    private fun setLocation(location: Location) {
         if (lastLocation == null || lastLocation!!.distanceTo(location) > 100  ) {
-            logService.addMessage("refreshing since the location changes by greater than 100m")
-            logService.addEvent("nws_location", "changed")
             lastLocation = Location(location)
             stationId = null
             timestamp = 0
             GlobalScope.launch { refresh() }
         }
-        else
-            logService.addMessage("not refreshing since the location changes by at less than 100m")
     }
 
-    suspend fun refresh() {
-        val logService = LogService()
-        logService.addMessage("starting NWS refresh")
-
+    private suspend fun refresh() {
         mutex.withLock {
             val duration = Date().time - timestamp
             if (duration > 1000 * 60 * refreshInterval) {
                 timestamp = Date().time
                 if ((lastLocation != null)) {
-                    logService.addEvent("nws_refresh", "refreshing")
                     getStation()
                     getConditions()
                     getForecast()
                 }
-                else
-                    logService.addMessage("skipping refresh because location isn't set")
             }
-            else
-                logService.addMessage("skipping refresh because refreshing too soon")
         }
     }
 
@@ -118,7 +113,7 @@ class NWSService {
         val response = url.readText()
         val stations = Gson().fromJson(response, NWSStationsObservations.Root::class.java)
 
-        this.conditions.postValue(Conditions(
+        conditions.postValue(Conditions(
             dewPoint = stations.properties.dewpoint.value,
             relativeHumidity = stations.properties.relativeHumidity.value,
             temperature = stations.properties.temperature.value,
@@ -143,7 +138,7 @@ class NWSService {
         val response = url.readText()
         val forecast = Gson().fromJson(response, NWSGridPointsForecast.Root::class.java)
 
-        this.forecasts.postValue(forecast.properties.periods.map {
+        forecasts.postValue(forecast.properties.periods.map {
             Forecast(
                 name = it.name,
                 icon = it.icon,
