@@ -98,6 +98,9 @@ class NWSService : LifecycleService() {
         if (lastLocation.distanceTo(location) > 100) {
             lastLocation = location
             stationId = null
+            gridX = null
+            gridY = null
+            gridWFO = null
             timestamp = 0
             GlobalScope.launch { refresh() }
         }
