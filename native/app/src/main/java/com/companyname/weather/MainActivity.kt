@@ -1,6 +1,10 @@
 package com.companyname.weather
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -9,22 +13,22 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.companyname.weather.fragments.PreferencesFragment
 import com.companyname.weather.services.LocationService
-import com.companyname.weather.services.RefreshService
-import com.google.android.gms.location.*
+import com.companyname.weather.services.NWSService
+import com.companyname.weather.services.PreferenceService
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
     companion object {
+        var instance: MainActivity? = null
         const val LOCATION_REQUEST: Int = 1
     }
 
-    private lateinit var fusedLocationClient:FusedLocationProviderClient
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        instance = this
 
         setContentView(R.layout.activity_main)
 
@@ -37,33 +41,33 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.nav_forecast, R.id.nav_map, R.id.nav_settings), drawerLayout)
+            R.id.nav_forecast, R.id.nav_settings), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // needs to happen before requesting location
-        PreferencesFragment.update(applicationContext)
-        PreferencesFragment.useDevice.observe(this, androidx.lifecycle.Observer { useDevice ->
-            if (useDevice)
-                LocationService().requestPermissions(this)
-            else
-                PreferencesFragment.lastLocation.value?.let { LocationService().setLocation(it) }
-        })
+        val drawListener = object: DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) { }
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) { }
+            override fun onDrawerClosed(drawerView: View) { }
+            override fun onDrawerOpened(drawerView: View) {
+                val manager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                val currentFocus = currentFocus
+                currentFocus?.let { manager.hideSoftInputFromWindow(it.windowToken, 0) }
+            }
 
-        LocationService().requestPermissions(this)
+        }
+        drawerLayout.addDrawerListener(drawListener)
+
+        startService(Intent(this, PreferenceService::class.java))
+        startService(Intent(this, LocationService::class.java))
+        startService(Intent(this, NWSService::class.java))
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        LocationService().resume(applicationContext)
-        RefreshService().resume(applicationContext)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        RefreshService().pause()
-        LocationService().pause()
+    override fun onDestroy() {
+        super.onDestroy()
+        stopService(Intent(this, PreferenceService::class.java))
+        stopService(Intent(this, LocationService::class.java))
+        stopService(Intent(this, NWSService::class.java))
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -75,11 +79,13 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             LOCATION_REQUEST -> {
-                PreferencesFragment.setUseDevice(applicationContext, true)
-                LocationService().resume(applicationContext)
+                if (permissions.isNotEmpty()) {
+                    if (grantResults.any { r -> r == -1 })
+                        PreferenceService.useDevice.value = false
+                    else
+                        LocationService.instance?.requestLocationUpdates()
+                }
             }
-            else -> PreferencesFragment.setUseDevice(applicationContext, false)
         }
     }
-
 }

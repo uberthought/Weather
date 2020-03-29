@@ -1,13 +1,17 @@
 package com.companyname.weather.fragments
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.companyname.weather.R
 import com.companyname.weather.databinding.ForecastFragmentBinding
+import com.companyname.weather.services.LocationService
 import com.companyname.weather.viewModels.ConditionsViewModel
 import com.companyname.weather.viewModels.LocationViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,6 +36,15 @@ class ForecastFragment: Fragment() {
             (activity as AppCompatActivity).nav_view.textView?.text = timestamp
             binding.timestamp.invalidate()
         })
+
+        Handler().postDelayed({
+            if (LocationService.hasPermission.value == true)
+                return@postDelayed
+            LocationService.location.value?.let {
+                if (it.latitude == 0.0 && it.longitude == 0.0)
+                    findNavController().navigate(R.id.action_nav_forecast_to_nav_map)
+            }
+        }, 200)
 
         return binding.root
     }

@@ -3,23 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_forecast">
+    app:startDestination="@id/nav_forecast"
+    >
 
     <fragment
         android:id="@+id/nav_forecast"
         android:name="com.companyname.weather.fragments.ForecastFragment"
-        android:label="@string/menu_forecast"
-        tools:layout="@layout/forecast_fragment" />
+        android:label="@string/title_forecast"
+        tools:layout="@layout/forecast_fragment" >
+        <action
+            android:id="@+id/action_nav_forecast_to_nav_map"
+            app:destination="@id/nav_map"
+            app:popUpTo="@id/nav_forecast" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_map"
         android:name="com.companyname.weather.fragments.MapFragment"
-        android:label="@string/menu_map"
+        android:label="@string/title_map"
         tools:layout="@layout/map_fragment" />
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.companyname.weather.fragments.PreferencesFragment"
-        android:label="@string/menu_settings"
-        tools:layout="@xml/preferences" />
+        android:name="com.companyname.weather.fragments.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/settings_fragment" >
+        <action
+            android:id="@+id/action_nav_settings_to_nav_map"
+            app:destination="@id/nav_map"
+            app:popUpTo="@id/nav_settings" />
+    </fragment>
+
 </navigation>

@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:824171647194:android:2cf61f6f29b65fd31915e3",
         "android_client_info": {
-          "package_name": "com.companyname.weather3"
+          "package_name": "com.companyname.weather"
         }
       },
       "oauth_client": [
@@ -55,7 +55,7 @@
           "client_id": "824171647194-mjcau76hc4gnpfuvn2bubqitjmfp0dfb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.companyname.weather3",
+            "package_name": "com.companyname.weather",
             "certificate_hash": "6158861f0b8f495e3793b8a6f9c7c311ee653484"
           }
         },

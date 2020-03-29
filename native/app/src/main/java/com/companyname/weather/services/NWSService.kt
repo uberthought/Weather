@@ -1,9 +1,11 @@
 package com.companyname.weather.services
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.location.Location
+import android.os.Handler
+import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.companyname.weather.services.nws.NWSGridPointsForecast
 import com.companyname.weather.services.nws.NWSPoints
 import com.companyname.weather.services.nws.NWSPointsStations
@@ -13,41 +15,40 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.lang.Exception
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NWSService {
+class NWSService : LifecycleService() {
 
     companion object {
+        var instance: NWSService? = null
+
         var location: MutableLiveData<String> = MutableLiveData()
         var conditions: MutableLiveData<Conditions> = MutableLiveData()
         var forecasts: MutableLiveData<List<Forecast>> = MutableLiveData()
 
         private var timestamp: Long = 0
-        private val mutex = Mutex()
-        private val observers: Observers = Observers()
-
-        private var lastLocation:Location? = null
     }
 
-    data class Conditions (
+    data class Conditions(
         val dewPoint: Double? = null,
         val relativeHumidity: Double? = null,
         val temperature: Double? = null,
         val windDirection: Double? = null,
         val windSpeed: Double? = null,
         val windGust: Double? = null,
-        val icon:String? = null,
-        val textDescription:String? = null,
-        val barometricPressure:Double? = null,
-        val visibility:Double? = null,
-        val windChill:Double? = null,
-        val heatIndex:Double? = null,
-        val timestamp:Date? = null
+        val icon: String? = null,
+        val textDescription: String? = null,
+        val barometricPressure: Double? = null,
+        val visibility: Double? = null,
+        val windChill: Double? = null,
+        val heatIndex: Double? = null,
+        val timestamp: Date? = null
     )
 
-    data class Forecast (
+    data class Forecast(
         val name: String? = null,
         val icon: String? = null,
         val shortForecast: String? = null,
@@ -59,14 +60,12 @@ class NWSService {
         val isDaytime: Boolean = false
     )
 
-    private class Observers {
-        init {
-            LocationService.lastLocation.observeForever { NWSService().setLocation(it) }
-            RefreshService.refresh.observeForever { GlobalScope.launch { NWSService().refresh() } }
-        }
-    }
+    private val refreshInterval: Long = 1000 * 60 * 15
 
-    private val refreshInterval:Long = 15
+    //    private val refreshInterval: Long = 1000 * 15
+    private val mutex = Mutex()
+    private var lastLocation: Location = Location("")
+    private var handler: Handler? = null
 
     private var stationId: String? = null
     private var gridX: Int? = null
@@ -74,9 +73,30 @@ class NWSService {
     private var gridWFO: String? = null
     private var baseURL = "https://api.weather.gov"
 
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+
+        LocationService.location.observe(this, Observer { setLocation(it) })
+
+        handler = Handler()
+        var runnable = Runnable { }
+        runnable = Runnable {
+            GlobalScope.launch { refresh() }
+            handler?.postDelayed(runnable, refreshInterval)
+        }
+        handler?.postDelayed(runnable, refreshInterval)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        instance = null
+        handler?.removeCallbacks(null)
+    }
+
     private fun setLocation(location: Location) {
-        if (lastLocation == null || lastLocation!!.distanceTo(location) > 100  ) {
-            lastLocation = Location(location)
+        if (lastLocation.distanceTo(location) > 100) {
+            lastLocation = location
             stationId = null
             timestamp = 0
             GlobalScope.launch { refresh() }
@@ -86,9 +106,13 @@ class NWSService {
     private suspend fun refresh() {
         mutex.withLock {
             val duration = Date().time - timestamp
-            if (duration > 1000 * 60 * refreshInterval) {
+            if (duration > refreshInterval) {
                 timestamp = Date().time
-                if ((lastLocation != null)) {
+                if ((lastLocation.latitude == 0.0 && lastLocation.longitude == 0.0)) {
+                    location.postValue(null)
+                    conditions.postValue(null)
+                    forecasts.postValue(null)
+                } else {
                     getStation()
                     getConditions()
                     getForecast()
@@ -98,70 +122,90 @@ class NWSService {
     }
 
     private fun getStation() {
-        val latitude = lastLocation!!.latitude
-        val longitude = lastLocation!!.longitude
-        val url = URL("$baseURL/points/$latitude,$longitude/stations")
-        val response = url.readText()
-        val points = Gson().fromJson(response, NWSPointsStations.Root::class.java)
-        location.postValue(points.features[0].properties.name)
-        stationId = points.features[0].properties.stationIdentifier
+        try {
+            val latitude = lastLocation.latitude
+            val longitude = lastLocation.longitude
+            val url = URL("$baseURL/points/$latitude,$longitude/stations")
+            val response = url.readText()
+            val points = Gson().fromJson(response, NWSPointsStations.Root::class.java)
+            location.postValue(points.features[0].properties.name)
+            stationId = points.features[0].properties.stationIdentifier
+        } catch (ex: Exception) {
+        }
     }
 
     @SuppressLint("SimpleDateFormat")
     private fun getConditions() {
-        val url = URL("$baseURL/stations/$stationId/observations/latest?require_qc=false")
-        val response = url.readText()
-        val stations = Gson().fromJson(response, NWSStationsObservations.Root::class.java)
+        stationId ?: return
 
-        conditions.postValue(Conditions(
-            dewPoint = stations.properties.dewpoint.value,
-            relativeHumidity = stations.properties.relativeHumidity.value,
-            temperature = stations.properties.temperature.value,
-            windDirection = stations.properties.windDirection.value,
-            windSpeed = stations.properties.windSpeed.value,
-            windGust = stations.properties.windGust.value,
-            icon = stations.properties.icon,
-            textDescription = stations.properties.textDescription,
-            barometricPressure = stations.properties.barometricPressure.value,
-            visibility = stations.properties.visibility.value,
-            windChill = stations.properties.windChill.value,
-            heatIndex = stations.properties.heatIndex.value,
-            timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sszzzzz").parse(stations.properties.timestamp)
-        ))
+        try {
+            val url = URL("$baseURL/stations/$stationId/observations/latest?require_qc=false")
+            val response = url.readText()
+            val stations = Gson().fromJson(response, NWSStationsObservations.Root::class.java)
+
+            conditions.postValue(
+                Conditions(
+                    dewPoint = stations.properties.dewpoint.value,
+                    relativeHumidity = stations.properties.relativeHumidity.value,
+                    temperature = stations.properties.temperature.value,
+                    windDirection = stations.properties.windDirection.value,
+                    windSpeed = stations.properties.windSpeed.value,
+                    windGust = stations.properties.windGust.value,
+                    icon = stations.properties.icon,
+                    textDescription = stations.properties.textDescription,
+                    barometricPressure = stations.properties.barometricPressure.value,
+                    visibility = stations.properties.visibility.value,
+                    windChill = stations.properties.windChill.value,
+                    heatIndex = stations.properties.heatIndex.value,
+                    timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sszzzzz").parse(stations.properties.timestamp)
+                )
+            )
+        } catch (ex: Exception) {
+        }
     }
 
     private fun getForecast() {
         if (listOf(gridX, gridY, gridWFO).any { it == null })
             getGridPoint()
 
-        val url = URL("$baseURL/gridpoints/$gridWFO/$gridX,$gridY/forecast")
-        val response = url.readText()
-        val forecast = Gson().fromJson(response, NWSGridPointsForecast.Root::class.java)
+        gridX ?: return
+        gridY ?: return
+        gridWFO ?: return
 
-        forecasts.postValue(forecast.properties.periods.map {
-            Forecast(
-                name = it.name,
-                icon = it.icon,
-                shortForecast = it.shortForecast,
-                detailedForecast = it.detailedForecast,
-                temperature = it.temperature,
-                windSpeed = it.windSpeed,
-                windDirection = it.windDirection,
-                temperatureTrend = it.temperatureTrend,
-                isDaytime = it.isDaytime
-            )
-        })
+        try {
+            val url = URL("$baseURL/gridpoints/$gridWFO/$gridX,$gridY/forecast")
+            val response = url.readText()
+            val forecast = Gson().fromJson(response, NWSGridPointsForecast.Root::class.java)
+
+            forecasts.postValue(forecast.properties.periods.map {
+                Forecast(
+                    name = it.name,
+                    icon = it.icon,
+                    shortForecast = it.shortForecast,
+                    detailedForecast = it.detailedForecast,
+                    temperature = it.temperature,
+                    windSpeed = it.windSpeed,
+                    windDirection = it.windDirection,
+                    temperatureTrend = it.temperatureTrend,
+                    isDaytime = it.isDaytime
+                )
+            })
+        } catch (ex: Exception) {
+        }
     }
 
     private fun getGridPoint() {
-        val latitude = lastLocation!!.latitude
-        val longitude = lastLocation!!.longitude
-        val url = URL("$baseURL/points/$latitude,$longitude")
-        val response = url.readText()
-        val points = Gson().fromJson(response, NWSPoints.Root::class.java)
+        try {
+            val latitude = lastLocation.latitude
+            val longitude = lastLocation.longitude
+            val url = URL("$baseURL/points/$latitude,$longitude")
+            val response = url.readText()
+            val points = Gson().fromJson(response, NWSPoints.Root::class.java)
 
-        gridWFO = points.properties.cwa
-        gridX = points.properties.gridX
-        gridY = points.properties.gridY
+            gridWFO = points.properties.cwa
+            gridX = points.properties.gridX
+            gridY = points.properties.gridY
+        } catch (ex: Exception) {
+        }
     }
 }

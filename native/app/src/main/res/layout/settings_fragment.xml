@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/large_padding"
+        android:paddingEnd="@dimen/large_padding"
+        android:focusable="true"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:background="@color/design_default_color_background"
+        >
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/use_device_location_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/large_padding"
+            android:paddingBottom="@dimen/small_padding"
+            android:text="@string/use_device_location"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textAlignment="textStart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/use_device_location"
+            app:layout_constrainedWidth="true" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/use_device_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/use_device_location_label" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/device_location_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small_padding"
+            android:text="@string/forecast_location"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textAlignment="textStart"
+            app:layout_constraintTop_toBottomOf="@id/use_device_location_label"
+            />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/device_location_text"
+            android:text="@string/not_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingBottom="@dimen/large_padding"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="@color/secondaryTextColor"
+            android:textAlignment="textStart"
+            app:layout_constraintTop_toBottomOf="@id/device_location_label"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

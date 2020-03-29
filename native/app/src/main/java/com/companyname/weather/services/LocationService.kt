@@ -1,95 +1,109 @@
 package com.companyname.weather.services
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Looper
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.companyname.weather.MainActivity
-import com.companyname.weather.fragments.PreferencesFragment
 import com.google.android.gms.location.*
 
-class LocationService() {
+class LocationService : LifecycleService() {
 
     companion object {
-        val lastLocation: MutableLiveData<Location> = MutableLiveData()
+        var instance: LocationService? = null
+        val location: MutableLiveData<Location> = MutableLiveData(Location(""))
+        val hasPermission: MutableLiveData<Boolean> = MutableLiveData(false)
 
-        private val observers: Observers = Observers()
-        private var locationCallback: LocationCallback? = null
-        private var fusedLocationClient: FusedLocationProviderClient? = null
+        val granularity = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
-    private class Observers() {
-        init {
-            PreferencesFragment.lastLocation.observeForever { location ->
-                location ?: return@observeForever
+    private val interval: Long = 1000 * 60 * 15
+//    private val interval: Long = 1000 * 15
 
-                if (lastLocation.value == null || lastLocation.value!!.latitude != location.latitude || lastLocation.value!!.longitude != location.longitude)
-                    lastLocation.value = location
+    private var locationCallback: LocationCallback? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+
+        PreferenceService.location.observe(this, Observer { location ->
+            if (PreferenceService.useDevice.value != false)
+                return@Observer
+            with(Companion.location) {
+                if (value == null)
+                    value = location
+                if (value!!.latitude != location.latitude || value!!.longitude != location.longitude)
+                    value = location
             }
+        })
 
-            RefreshService.refresh.observeForever {context ->
-                LocationService().resume(context)
-            }
-        }
+        PreferenceService.useDevice.observe(this, Observer { useDevice ->
+            if (useDevice)
+                requestLocationUpdates()
+            else
+                cancelLocationUpdates()
+        })
     }
 
-//    private val granularity = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-    private val granularity = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
-
-    init {
-        if (lastLocation.value == null)
-            PreferencesFragment.lastLocation.value?.let { setLocation(it) }
+    override fun onDestroy() {
+        super.onDestroy()
+        instance = null
     }
 
-    fun setLocation(location: Location) {
-        if (lastLocation.value == null || lastLocation.value!!.latitude != location.latitude || lastLocation.value!!.longitude != location.longitude)
-            lastLocation.value = location
-    }
+    fun requestLocationUpdates() {
+        if (PreferenceService.useDevice.value != true)
+            return
 
-    fun requestPermissions(activity: MainActivity) {
-        PreferencesFragment.useDevice.value?.let {
-            if (!it)
+        MainActivity.instance?.let { activity ->
+            if (!granularity.all { l -> ActivityCompat.checkSelfPermission(baseContext, l) == PackageManager.PERMISSION_GRANTED }) {
+                ActivityCompat.requestPermissions(activity, granularity, MainActivity.LOCATION_REQUEST)
                 return
+            }
         }
 
-        if (granularity.any { l -> ActivityCompat.checkSelfPermission(activity.applicationContext, l) != PackageManager.PERMISSION_GRANTED }) {
-            ActivityCompat.requestPermissions(activity, granularity, MainActivity.LOCATION_REQUEST)
+        if (!granularity.all { l -> ActivityCompat.checkSelfPermission(baseContext, l) == PackageManager.PERMISSION_GRANTED })
             return
+
+        hasPermission.value?.let {
+            if (!it)
+                hasPermission.value = true
         }
-    }
 
-    fun resume(context: Context) {
-        if (granularity.any { l -> ActivityCompat.checkSelfPermission(context, l) != PackageManager.PERMISSION_GRANTED })
-            return
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(baseContext)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        fusedLocationClient!!.lastLocation.addOnSuccessListener { setLocation(it) }
+        fusedLocationClient.lastLocation.addOnSuccessListener { it?.let { location.value = it } }
 
         val locationRequest = LocationRequest.create()?.apply {
-            this.interval = 1000
-            this.fastestInterval = 1000
+            this.interval = this@LocationService.interval
+            this.fastestInterval = this@LocationService.interval
             this.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult?.let {
-                    val lastLocation = locationResult.locations.last()
-                    lastLocation?.let { newLocation -> setLocation(newLocation) }
-                    fusedLocationClient!!.removeLocationUpdates(locationCallback)
+        if (locationCallback == null)
+            locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult?) {
+                    locationResult?.let { locationResult ->
+                        val location = locationResult.locations.last()
+                        with(Companion.location) {
+                            if (value == null)
+                                value = location
+                            if (value!!.latitude != location.latitude || value!!.longitude != location.longitude)
+                                value = location
+                        }
+                    }
                 }
-            }
         }
-        fusedLocationClient!!.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
-    fun pause() {
-        fusedLocationClient ?: return
+    private fun cancelLocationUpdates() {
         locationCallback ?: return
-
-        fusedLocationClient!!.removeLocationUpdates(locationCallback)
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(baseContext)
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+        locationCallback = null
     }
 }

@@ -10,8 +10,8 @@ class ForecastViewModel : ViewModel() {
 
     init { NWSService.forecasts.observeForever { forecasts -> onForecastsChanged(forecasts) } }
 
-    private fun onForecastsChanged(forecasts: List<NWSService.Forecast>) {
-        this.forecasts.postValue(forecasts.map {
+    private fun onForecastsChanged(forecasts: List<NWSService.Forecast>?) {
+        this.forecasts.postValue(forecasts?.map {
             DetailedConditionsViewModel.Details (
                 title = it.name,
                 icon = it.icon,

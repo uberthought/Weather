@@ -20,7 +20,7 @@ class NWSStationsObservations {
         val rawMessage : String,
         val textDescription : String,
         val icon : String,
-        val presentWeather : List<String>,
+        val presentWeather : List<PresentWeather>,
         val temperature : Temperature,
         val dewpoint : Dewpoint,
         val windDirection : WindDirection,
@@ -38,6 +38,13 @@ class NWSStationsObservations {
         val windChill : WindChill,
         val heatIndex : HeatIndex,
         val cloudLayers : List<CloudLayers>
+    )
+
+    data class PresentWeather (
+        val intensity : String,
+        val modifier : String,
+        val weather : String,
+        val rawString : String
     )
 
     data class RelativeHumidity (

@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
@@ -17,7 +15,6 @@ import com.companyname.weather.R
 import com.companyname.weather.services.FileCachingService
 import com.companyname.weather.databinding.DetailedConditionsFragmentBinding
 import kotlinx.android.synthetic.main.detailed_conditions_fragment.*
-import kotlinx.android.synthetic.main.detailed_conditions_fragment.view.*
 
 class DetailedConditionsFragment : Fragment() {
     private lateinit var viewModel: DetailedConditionsViewModel
